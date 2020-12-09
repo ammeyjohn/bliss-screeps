@@ -1,0 +1,34 @@
+{
+  "name": "bliss-screeps",
+  "version": "0.1.0",
+  "description": "A screeps game world.",
+  "main": "main.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ammeyjohn/bliss-screeps.git"
+  },
+  "keywords": [
+    "screeps"
+  ],
+  "author": "Patrick <ammeyjohn@qq.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ammeyjohn/bliss-screeps/issues"
+  },
+  "homepage": "https://github.com/ammeyjohn/bliss-screeps#readme",
+  "dependencies": {
+    "@types/lodash": "^3.10.1",
+    "@types/node": "^14.14.10",
+    "@types/screeps": "^3.2.1"
+  },
+  "devDependencies": {
+    "grunt": "^1.3.0",
+    "grunt-contrib-clean": "^2.0.0",
+    "grunt-contrib-concat": "^1.0.1",
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-contrib-watch": "^1.1.0",
+    "grunt-screeps": "^1.5.0",
+    "screeps-multimeter": "^1.11.1"
+  }
+}
