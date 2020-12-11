@@ -1,8 +1,6 @@
 /**
  * 定义控制器扩展
  */
-
-
 Object.defineProperty(StructureController.prototype, 'name', {
   get: function() {
     return this.room.name;
@@ -28,7 +26,7 @@ const statCreepsInRoom = (room) => {
 /**
  * 检查房间人口数量
  */
-const checkPopulation = (room) => {
+StructureController.prototype.checkPopulation = (room) => {
   let creeps_count = statCreepsInRoom(room);
   for (const role of global.roles) {
     const creep_count = creeps_count[role.type];
@@ -47,5 +45,5 @@ const checkPopulation = (room) => {
 }
 
 StructureController.prototype.check = function() {
-  checkPopulation(this.room);
+  this.checkPopulation(this.room);
 }

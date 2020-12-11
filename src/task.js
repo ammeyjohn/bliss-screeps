@@ -12,17 +12,15 @@ global.TASK_INVALID = 'invalid';
 module.exports = class Task {
   /**
    *
-   * @param {string} name 任务名称
-   * @param {string} type 任务类型名称
+   * @param {string} type       任务类型名称
    * @param {object} publisher  任务发布人
    * @param {object} target     任务目标对象
    * @param {object} options    任务配置项，默认为null
    * @param {object} data       任务附加数据，默认为null
    * @param {number} priority   任务优先级，默认100
    */
-  constructor(name, type, publisher, target, priority, options = null, data = null) {
+  constructor(type, publisher, target, priority, options = null, data = null) {
     this.taskId = `${type}@${target.id}_${Game.time}`;
-    this.taskName = name;
     this.taskType = type;
     this.publisher = publisher;
     this.target = target;

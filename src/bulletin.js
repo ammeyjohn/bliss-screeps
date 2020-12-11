@@ -11,20 +11,42 @@ module.exports = class Bulletin {
         assigned_queue: []
       }
     }
-    this._queue = Memory.bulletin.queue;
-    this._assigned_queue = Memory.bulletin.assigned_queue;
+  }
+
+  get queue() {
+    return Memory.bulletin.queue;
+  }
+  set queue(value) {
+    Memory.bulletin.queue = value;
+  }
+
+  get assigned_queue() {
+    return Memory.bulletin.assigned_queue;
+  }
+  set assigned_queue(value) {
+    Memory.bulletin.assigned_queue = assigned_queue;
   }
 
   /**
    * 获取公告板任务数量
    */
   get taskCount() {
-    return this._queue.length;
+    return this.queue.length;
+  }
+
+  /**
+   * 检查某个建筑是否能够发布指定类型的任务
+   * @param {*} publisherId
+   * @param {*} taskType
+   */
+  canPublish(publisherId, taskType) {
+    let count = _.filter(this.queue, t => t.publisher.id == publisherId && t.taskType == taskType).length;
+    count += _.filter(this.assigned_queue, t => t.publisher.id == publisherId && t.taskType == taskType).length;
+    return count < global.tasks[taskType].max_count;
   }
 
   /**
    * 向公告板发布任务
-   * @param {string} name 任务名称
    * @param {string} type 任务类型
    * @param {object} publisher 任务来源
    * @param {object} target 任务目标
@@ -32,39 +54,42 @@ module.exports = class Bulletin {
    * @param {object} data     任务附加数据，默认为null
    * @param {number} priority 任务优先级，默认100。 优先级数字越小，优先级越高
    */
-  publish(name, type, publisher, target, priority = 100, options = null, data = null) {
-    let task = new Task(name, type, publisher, target, priority, options, data);
-    task.taskState = TASK_WAITING;
-    this._queue.push(task);
-    global.log.debug(`Tasks queue count: ${this.taskCount}`);
+  publish(type, publisher, target, priority = 100, options = null, data = null) {
+    if (!this.canPublish(publisher.id, type)) {
+      return null;
+    }
+    // 验证target是否有效
+    if (!Game.getObjectById(target.id)) {
+      return null;
+    }
+
+    let task = new Task(type, publisher, target, priority, options, data);
+    this.queue.push(task);
 
     // 按照priority和tick升序排列
-    this._queue = _.sortBy(this._queue, ['priority', 'tick']);
-    Memory.bulletin.queue = this._queue;
+    this.queue = _.sortBy(this.queue, ['priority', 'tick']);
+    global.log.debug(`Tasks queue count: ${this.taskCount}`);
     return task;
   }
 
-  /**
-   * 获取一个任务
-   */
-  getTask() {
+  assignTo(operName) {
     if (this.taskCount == 0) {
       return null;
     }
-    const task = this._queue.pop();
-    this._assigned_queue.push(task);
+    let task = this.queue.pop();
+    task.creepName = operName;
+    this.assigned_queue.push(task);
     return task;
   }
 
   /**
-   * 根据任务类型获取任务列表
-   * @param {string} type
+   * 任务完成
+   * @param {*} id
    */
-  getTaskByType(type) {
-    const idx = _.findIndex(this._queue, t => { t.taskType === type });
-    const task = this._queue[idx];
-    this._queue.splice(idx, 1)
-    this._assigned_queue.push(task);
-    return task;
+  complete(id) {
+    let idx = _.findIndex(this.assigned_queue, t => t.taskId == id);
+    if (idx > -1) {
+      this.assigned_queue.splice(idx, 1);
+    }
   }
 }
