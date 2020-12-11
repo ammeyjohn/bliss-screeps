@@ -84,12 +84,29 @@ module.exports = class Bulletin {
 
   /**
    * 任务完成
-   * @param {*} id
+   * @param {*} ids
    */
-  complete(id) {
-    let idx = _.findIndex(this.assigned_queue, t => t.taskId == id);
-    if (idx > -1) {
-      this.assigned_queue.splice(idx, 1);
+  complete(...ids) {
+
+    // 删除未分配任务
+    this.queue = _.remove(this.queue, t => _.find(ids, i => i == t.taskId));
+
+    for (const id of ids) {
+      // 删除已分配任务
+      let idx = _.findIndex(this.assigned_queue, t => t.taskId == id);
+      if (idx > -1) {
+        const task = this.assigned_queue[idx];
+        this.assigned_queue.splice(idx, 1);
+
+        console.log(JSON.stringify(task));
+
+        // 通知creep任务已经完成
+        const creep = Game.creeps[task.creepName];
+        if (creep) {
+          console.log(task.creepName);
+          creep.complete();
+        }
+      }
     }
   }
 }
