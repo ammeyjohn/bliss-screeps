@@ -10,7 +10,7 @@ module.exports.loop = () => {
   const room = _.values(Game.rooms)[0];
 
   // 房间人口管理
-  room.controller.population();
+  room.controller.population(room);
 
   // 遍历所有建筑，检查建筑状态，发现是否有需要处理的任务
   const structures = room.find(FIND_MY_STRUCTURES, {
