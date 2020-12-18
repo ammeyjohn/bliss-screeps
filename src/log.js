@@ -14,19 +14,19 @@ const buildArguments = (level) => {
   const out = [];
   switch (level) {
     case ERROR:
-      out.push(setColor('[ERROR]', 'red'));
+      out.push(setColor(`${Game.time} [ERROR]`, 'red'));
       break;
     case WARNING:
-      out.push(setColor('[WARNING]', 'orange'));
+      out.push(setColor(`${Game.time} [WARNING]`, 'orange'));
       break;
     case INFO:
-      out.push(setColor('[INFO]', 'green'));
+      out.push(setColor(`${Game.time} [INFO]`, 'green'));
       break;
     case DEBUG:
-      out.push(setColor('[DEBUG]', 'gray'));
+      out.push(setColor(`${Game.time} [DEBUG]`, 'gray'));
       break;
     case FATAL:
-      out.push(setColor('[FATAL]', FATAL_COLOR));
+      out.push(setColor(`${Game.time} [FATAL]`, FATAL_COLOR));
       break;
   }
   return out;

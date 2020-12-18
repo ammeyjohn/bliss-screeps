@@ -1,7 +1,8 @@
 require('./constants');
 require('./log');
 // 各种扩展
-require('./proto.controller')
+require('./proto.room');
+require('./proto.controller');
 require('./proto.creep');
 require('./proto.spawn');
 
@@ -25,19 +26,22 @@ module.exports.loop = () => {
     }
   }
 
-  const creeps = _.filter(Game.creeps, c => c.room.id == room.id);
-  for (const creep of creeps) {
-    if (creep.work) {
-      creep.work();
-    }
-  }
+  // 执行任务
+  // global.bulletin.execute();
+
+  // const creeps = _.filter(Game.creeps, c => c.room.id == room.id);
+  // for (const creep of creeps) {
+  //   if (creep.work) {
+  //     creep.work();
+  //   }
+  // }
 
   // 清理creeps缓存
-  for(var name in Memory.creeps) {
-    if(!Game.creeps[name]) {
-        delete Memory.creeps[name];
-        global.log.info('Clearing non-existing creep memory:', name);
-    }
-  }
+  // for(var name in Memory.creeps) {
+  //   if(!Game.creeps[name]) {
+  //       delete Memory.creeps[name];
+  //       global.log.info('Clearing non-existing creep memory:', name);
+  //   }
+  // }
 }
 
