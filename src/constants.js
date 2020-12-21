@@ -15,7 +15,8 @@ global.settings = {
 global.tasks = {
   'harvest': {
     max_count: 1,
-    priority: 50,
+    max_period: 100,
+    priority: 50
   }
 };
 

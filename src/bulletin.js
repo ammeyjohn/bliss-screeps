@@ -1,5 +1,5 @@
-// 各种任务
-const TaskHarvest = require('./task_harvest');
+const Task = require('./task');
+const TaskWork = require('./task_work');
 
 /**
  * 定义公告板对象
@@ -33,7 +33,7 @@ module.exports = class Bulletin {
    * @param {*} taskType
    */
   canPublish(target, taskType) {
-    let count = _.filter(this.queue, t => t.task.target.id == target.id && t.task.taskType == taskType).length;
+    let count = _.filter(this.queue, t => t.target.id == target.id && t.taskType == taskType).length;
     return count < global.tasks[taskType].max_count;
   }
 
@@ -87,13 +87,14 @@ module.exports = class Bulletin {
   execute() {
 
     // 清理无效的任务
-    // this.queue = _.remove(this.queue, function(task) {
-    //   const ret = !task.isValid();
-    //   if (ret) {
-    //     global.log.info(`Task ${task.taskId} invalid.`);
-    //   }
-    //   return ret;
-    // });
+    this.queue = _.remove(this.queue, function(task) {
+      const work = TaskWork.fromTask(task);
+      const ret = !work.isValid();
+      if (ret) {
+        global.log.info(`Task ${task.taskId} invalid.`);
+      }
+      return ret;
+    });
 
     // 为任务分配执行者
     // for (let task in this.queue) {

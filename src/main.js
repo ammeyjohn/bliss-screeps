@@ -26,7 +26,7 @@ module.exports.loop = () => {
   }
 
   // 执行任务
-  // global.bulletin.execute();
+  global.bulletin.execute();
 
   // const creeps = _.filter(Game.creeps, c => c.room.id == room.id);
   // for (const creep of creeps) {

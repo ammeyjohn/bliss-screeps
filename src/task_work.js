@@ -1,4 +1,5 @@
 const Task = require('./task');
+const TaskHarvest = require('./task_harvest');
 
 /**
  * 定义任务操作对象
@@ -23,6 +24,10 @@ module.exports = class TaskWork {
       work.task = task;
     }
     return work;
+  }
+
+  static createTask() {
+
   }
 
   /**
@@ -56,6 +61,10 @@ module.exports = class TaskWork {
    * 验证任务是否有效
    */
   isValid() {
+    // 是否超过有效期
+    if (Game.time - this.task.taskTime > global.tasks[this.task.taskType].max_period) {
+      return false;
+    }
     global.bulletin.warning('Abstract task.');
     return false;
   }
