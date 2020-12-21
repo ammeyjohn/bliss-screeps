@@ -42,7 +42,7 @@ module.exports = class Log {
     return global.settings.log.level;
   }
 
-  setLogLevel = (level) => {
+  setLogLevel(level) {
     let changeValue = true;
     switch (level) {
       case ERROR:

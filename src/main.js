@@ -1,7 +1,6 @@
 require('./constants');
 require('./log');
 // 各种扩展
-require('./proto.room');
 require('./proto.controller');
 require('./proto.creep');
 require('./proto.spawn');
@@ -37,11 +36,11 @@ module.exports.loop = () => {
   // }
 
   // 清理creeps缓存
-  // for(var name in Memory.creeps) {
-  //   if(!Game.creeps[name]) {
-  //       delete Memory.creeps[name];
-  //       global.log.info('Clearing non-existing creep memory:', name);
-  //   }
-  // }
+  for(var name in Memory.creeps) {
+    if(!Game.creeps[name]) {
+        delete Memory.creeps[name];
+        global.log.info('Clearing non-existing creep memory:', name);
+    }
+  }
 }
 

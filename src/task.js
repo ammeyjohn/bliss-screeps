@@ -24,53 +24,7 @@ module.exports = class Task {
     this.options = Object.assign({}, DEFAULT_OPTIONS, options);
     this.data = data;
     this.taskTime = Game.time;      // 任务创建时间
-    this.executors = [];            // 任务分配到的creep
+    this.executor = null;           // 任务分配到的creep
     this.hasCompleted = false;      // 表示任务是否已经完成
-  }
-
-  /**
-   * 设置任务的执行人
-   * @param {array} executors
-   */
-  setExecutors(...executors) {
-    if (this.executors.length >= this.options.exec_count) {
-      global.bulletin.warning(`Task executors count overflow. ${this.taskId}`)
-      return;
-    }
-    for (let exec of executors) {
-      let executor = Game.getObjectById(exec.id);
-      if (!executor.canAssign(this)) {
-        continue;
-      }
-      this.executors.push(exec);
-      executor.workTask = this;
-    }
-  }
-
-  /**
-   * 标志任务已经完成
-   */
-  complete() {
-    this.hasCompleted = true;
-    for (let exec of executors) {
-      let executor = Game.getObjectById(exec.id);
-      executor.workTask = null;
-    }
-  }
-
-  /**
-   * 验证任务是否有效
-   */
-  isValid() {
-    global.bulletin.warning('Abstract task.');
-    return false;
-  }
-
-  /**
-   * 执行任务。任务执行成功返回true，否则返回false。
-   */
-  execute() {
-    global.bulletin.warning('Abstract task.');
-    return false;
   }
 }

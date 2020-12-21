@@ -33,7 +33,7 @@ module.exports = class Bulletin {
    * @param {*} taskType
    */
   canPublish(target, taskType) {
-    let count = _.filter(this.queue, t => t.target.id == target.id && t.taskType == taskType).length;
+    let count = _.filter(this.queue, t => t.task.target.id == target.id && t.task.taskType == taskType).length;
     return count < global.tasks[taskType].max_count;
   }
 
