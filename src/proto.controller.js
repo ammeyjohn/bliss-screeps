@@ -1,5 +1,6 @@
 /**
- * 定义控制器扩展
+ * 定义控制器扩展，控制负责管理内容
+ * * 人口管理
  */
 Object.defineProperty(StructureController.prototype, 'name', {
   get: function() {
@@ -25,7 +26,10 @@ const statCreepsInRoom = (room) => {
   return creeps_count;
 }
 
-/* 从房间查找可用的Spawn */
+/**
+ * 从房间查找可用的Spawn
+ * 未在孵化的spawn
+*/
 const findAvailSpawn = (room) => {
   const spawns = room.find(FIND_MY_STRUCTURES, {
     filter: { structureType: STRUCTURE_SPAWN }
@@ -41,27 +45,27 @@ const findAvailSpawn = (room) => {
 /**
  * 房间人口管理
  */
-StructureController.prototype.population = (room) => {
+StructureController.prototype.population = function() {
   // 获取房间中各种creep的数量
-  let creeps_count = statCreepsInRoom(room);
+  let creeps_count = statCreepsInRoom(this.room);
+  log.printObject(creeps_count);
+
   for (const r in creeps_count) {
     const cnt = creeps_count[r];
     // 如果某种creep数量小于指定的数量，则需要创建这种creep
     if (cnt.count < cnt.role.min_count) {
-      if (room.energyAvailable < cnt.role.energy) {
+      if (this.room.energyAvailable < cnt.role.energy) {
         // 如果房间能量不够，那么本次不创建
         continue;
       }
       // 获取可用的spawn，即未在孵化的spawn
-      const spawn = findAvailSpawn(room);
+      const spawn = findAvailSpawn(this.room);
       if (!spawn) {
         // 如果无法获取到可用的spawn，那么本次不创建creep
         return;
       }
       spawn.spawnCreep(cnt.role.body, `${cnt.role.prefix}@${Game.time}`, { memory: { role: cnt.role.type }});
+      log.info('Spawn creep: ', cnt.role.type);
     }
   }
-}
-
-StructureController.prototype.check = function() {
 }

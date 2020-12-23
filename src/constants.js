@@ -1,24 +1,5 @@
-const Log = require('./log');
-const Bulletin = require('./bulletin');
-
-global.TASK_SPAWN = 'spawn';
-global.TASK_HARVEST = 'harvest';
-
-global.bulletin = new Bulletin();
-global.log = new Log();
-global.settings = {
-  log: {
-    level: DEBUG
-  }
-};
-
-global.tasks = {
-  'harvest': {
-    max_count: 1,
-    max_period: 100,
-    priority: 50
-  }
-};
+global.$ = global;
+global.settings = { };
 
 global.roles = [
   {

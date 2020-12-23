@@ -36,7 +36,7 @@ const buildArguments = (level) => {
 * 日志对象
 * 支持Console输出以及邮件通知
 */
-module.exports = class Log {
+class Log {
 
   get level() {
     return global.settings.log.level;
@@ -101,3 +101,7 @@ module.exports = class Log {
   }
 }
 
+$.settings['log'] = {
+  level: DEBUG
+}
+$.log = new Log();

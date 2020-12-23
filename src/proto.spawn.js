@@ -12,6 +12,6 @@ StructureSpawn.prototype.check = function() {
   if (this.store.getFreeCapacity(RESOURCE_ENERGY) > 0) {
     // 获取最近的source
     let source = this.room.find(FIND_SOURCES)[0];
-    global.bulletin.publish(TASK_HARVEST, { id: source.id }, { id: this.id }, global.tasks[TASK_HARVEST].priority);
+    bulletin.publish(TASK_HARVEST, source.id, this.id);
   }
 }
