@@ -69,3 +69,11 @@ StructureController.prototype.population = function() {
     }
   }
 }
+
+/**
+ * 发布控制器能力收集任务
+ */
+StructureController.prototype.check = function() {
+  let source = this.room.find(FIND_SOURCES)[1];
+  bulletin.publish(TASK_UPGRADE, source.id, this.id);
+}

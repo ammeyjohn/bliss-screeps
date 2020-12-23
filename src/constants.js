@@ -22,5 +22,10 @@ global.tasks = {
     max_count: 1,
     max_period: 100,
     priority: 50
+  },
+  'upgrade': {
+    max_count: 1,
+    max_period: 100,
+    priority: 50
   }
 };

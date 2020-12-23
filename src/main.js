@@ -19,7 +19,8 @@ module.exports.loop = () => {
   // 遍历所有建筑，检查建筑状态，发现是否有需要处理的任务
   const structures = room.find(FIND_MY_STRUCTURES, {
     filter: function(obj) {
-      return obj.structureType == STRUCTURE_SPAWN
+      return obj.structureType == STRUCTURE_SPAWN ||
+             obj.structureType == STRUCTURE_CONTROLLER
     }
   });
   for (const idx in structures) {

@@ -39,7 +39,9 @@ class Bulletin {
    * @param {*} targetId
    */
   canPublish(taskType, targetId) {
-    let count = _.filter(this.tasks, t => t.targetId == targetId && t.taskType == taskType).length;
+    let count = _.filter(this.tasks, t => t.hasCompleted == false &&
+                                     t.targetId == targetId &&
+                                     t.taskType == taskType).length;
     return count < $.tasks[taskType].max_count;
   }
 
