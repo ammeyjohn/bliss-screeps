@@ -13,5 +13,12 @@ StructureSpawn.prototype.check = function() {
     // 获取最近的source
     let source = this.room.find(FIND_SOURCES)[0];
     bulletin.publish(TASK_HARVEST, source.id, this.id);
+    this.memory.hasTask = true;
+  } else {
+    if (this.memory.hasTask) {
+      // 如果能量已经满了，删除公告板中的同类任务
+      bulletin.reqComplete(TASK_HARVEST, this.id);
+      this.memory.hasTask = false;
+    }
   }
 }

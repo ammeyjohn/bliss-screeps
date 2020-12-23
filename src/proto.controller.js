@@ -48,7 +48,7 @@ const findAvailSpawn = (room) => {
 StructureController.prototype.population = function() {
   // 获取房间中各种creep的数量
   let creeps_count = statCreepsInRoom(this.room);
-  log.printObject(creeps_count);
+  // log.printObject(creeps_count);
 
   for (const r in creeps_count) {
     const cnt = creeps_count[r];

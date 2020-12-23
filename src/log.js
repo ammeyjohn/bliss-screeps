@@ -102,6 +102,6 @@ class Log {
 }
 
 $.settings['log'] = {
-  level: DEBUG
+  level: INFO
 }
 $.log = new Log();
