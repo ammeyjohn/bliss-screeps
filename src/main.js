@@ -4,9 +4,10 @@ require('./bulletin');
 // 引用扩展
 require('./proto.controller');
 require('./proto.spawn');
+require('./proto.extension');
 require('./proto.creep');
 
-log.warning('Server restart.');
+log.debug('Server restart.');
 
 
 module.exports.loop = () => {
@@ -20,7 +21,8 @@ module.exports.loop = () => {
   const structures = room.find(FIND_MY_STRUCTURES, {
     filter: function(obj) {
       return obj.structureType == STRUCTURE_SPAWN ||
-             obj.structureType == STRUCTURE_CONTROLLER
+             obj.structureType == STRUCTURE_CONTROLLER ||
+             obj.structureType == STRUCTURE_EXTENSION
     }
   });
   for (const idx in structures) {
@@ -28,6 +30,14 @@ module.exports.loop = () => {
     if (structure.check) {
       structure.check();
     }
+  }
+
+  // 设施建造任务
+  let sites = room.find(FIND_CONSTRUCTION_SITES);
+  for(const idx in sites) {
+    const site = sites[idx];
+    let source = room.find(FIND_SOURCES)[3];
+    $.bulletin.publish(TASK_BUILD, source.id, site.id);
   }
 
   // 推动creep执行任务

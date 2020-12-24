@@ -77,8 +77,12 @@ module.exports = class Worker {
    * 验证任务是否有效
    */
   isValid() {
-    log.warning('Abstract task.');
-    return false;
+    const s = Game.getObjectById(this.sourceId);
+    if (s == null) { return false; }
+
+    const t = Game.getObjectById(this.targetId);
+    if (t == null) { return false; }
+    return true;
   }
 
   /**

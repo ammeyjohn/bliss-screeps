@@ -10,14 +10,29 @@ Object.defineProperty(Creep.prototype, 'curTask', {
   }
 });
 
+Object.defineProperty(Creep.prototype, 'mode', {
+  get: function() {
+    return this.memory.mode;
+  },
+  set: function(mode) {
+    this.memory.mode = mode;
+  }
+});
+
 /**
  * 清除已经分配的任务
  */
-Creep.prototype.unassign = function(task) {
-  if (this.memory.taskId ===  task.taskId) {
-    this.memory.taskId = null;
-    log.info(`Task ${task.taskType} has unassigned from ${this.name}.`);
-  }
+Creep.prototype.unassign = function() {
+  // log.info(`Task ${this.curTask.taskType} has unassigned from ${this.name}.`);
+  this.memory.taskId = null;
+}
+
+/**
+ * 任务无效时主动放弃任务
+ */
+Creep.prototype.abandon = function() {
+  this.memory.taskId = null;
+  log.info(`${this.name} abandoned task.`);
 }
 
 /**
@@ -28,17 +43,32 @@ Creep.prototype.execute = function() {
   if (this.spawning) { return; }
   if (!this.memory.taskId) {
     // 向公告板请求任务
-    let worker = $.bulletin.reqTask();
-    if (worker) {
-      worker.dispatch(this.id);
-      this.memory.taskId = worker.taskId;
-      log.info(`Task ${worker.taskType} has assigned to ${this.name}.`);
+    this.worker = $.bulletin.reqTask();
+    if (this.worker) {
+      this.worker.dispatch(this.id);
+      this.memory.taskId = this.worker.taskId;
+      log.info(`Task ${this.worker.taskType} has assigned to ${this.name}.`);
     }
   }
 
-  const worker = this.curTask;
-  if (worker != null) {
-    // 如果已经申请到任务，则执行任务
-    worker.execute();
+  if (this.memory.taskId == null) {
+    return;
   }
+
+  const worker = this.curTask;
+  if (worker == null) {
+    // 如果无法获取任务对象，主动放弃任务
+    this.abandon();
+    return;
+  }
+
+  if (!worker.isValid()) {
+    // 如果任务已经无效，主动放弃任务，并设置任务完成状态
+    this.abandon();
+    worker.hasCompleted = true;
+    return;
+  }
+
+  // 执行任务
+  worker.execute();
 }
