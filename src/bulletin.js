@@ -1,4 +1,5 @@
 const Task = require('./task');
+const WorkHarvester = require('./work_harvester');
 
 /**
  * 定义公告板对象，用于保存和管理任务
@@ -20,17 +21,6 @@ class Bulletin {
 
   get taskCount() {
     return Memory.tasks.length;
-  }
-
-  /**
-   * 创建任务
-   * @param {*} taskType
-   * @param {*} sourceId
-   * @param {*} targetId
-   * @param {*} options
-   */
-  createTask(taskType, sourceId, targetId, options) {
-    return new Task(taskType, sourceId, targetId, options);
   }
 
   /**
@@ -76,7 +66,22 @@ class Bulletin {
    * @param {*} taskId
    */
   delTask(taskId) {
-    _.remove(this.tasks, t => t.taskId === taskId);
+    this.tasks = _.remove(this.tasks, t => t.taskId === taskId);
+  }
+
+  /**
+   * 根据任务类型创建Worker
+   * @param {*} task
+   */
+  createWorker(task) {
+    let worker = null;
+    switch (task.taskType) {
+      case TASK_HARVEST: worker = new WorkHarvester(task); break;
+      default:
+        log.error('Invalid task type ', task.taskType);
+        break;
+    }
+    return worker;
   }
 
   /**
@@ -87,7 +92,15 @@ class Bulletin {
     if (this.taskCount == 0) {
       return null;
     }
-    return _.find(this.tasks, t => t.taskId == taskId);
+    let task = _.find(this.tasks, t => t.taskId == taskId);
+    if (task) {
+      let worker = this.createWorker(task);
+      if (!worker) {
+        task.hasCompleted = true;
+      }
+      return worker;
+    }
+    return null;
   }
 
   /**
@@ -97,7 +110,15 @@ class Bulletin {
     if (this.taskCount == 0) {
       return null;
     }
-    return _.find(this.tasks, t => t.executorId == null && !t.hasCompleted);
+    let task = _.find(this.tasks, t => t.executorId == null && !t.hasCompleted);
+    if (task) {
+      let worker = this.createWorker(task);
+      if (!worker) {
+        task.hasCompleted = true;
+      }
+      return worker;
+    }
+    return null
   }
 
   /**
@@ -132,7 +153,7 @@ class Bulletin {
    * 清理所有已经完成的任务
    */
   clear() {
-    _.remove(this.tasks, t => t.hasCompleted);
+    this.tasks = _.remove(this.tasks, t => t.hasCompleted);
     log.info('Task cleared.')
   }
 }

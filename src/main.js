@@ -44,6 +44,9 @@ module.exports.loop = () => {
           log.info('Clearing non-existing creep memory:', name);
       }
     }
+
+    // 清理公告板中已经完成的任务
+    $.bulletin.clear();
   }
 }
 
