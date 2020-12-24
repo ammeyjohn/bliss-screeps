@@ -138,7 +138,7 @@ class Bulletin {
    */
   complete(task) {
     task.hasCompleted = true;
-    log.debug(`Task completed: ${task.taskId};`);
+    log.info(`Task completed: ${task.taskId};`);
   }
 
   /**
@@ -156,7 +156,7 @@ class Bulletin {
         executor.unassign(task);
       }
       task.hasCompleted = true;
-      log.debug(`Task completed: ${task.taskId};`);
+      log.info(`Task completed: ${task.taskId};`);
     }
   }
 

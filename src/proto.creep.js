@@ -25,6 +25,7 @@ Object.defineProperty(Creep.prototype, 'mode', {
 Creep.prototype.unassign = function() {
   // log.info(`Task ${this.curTask.taskType} has unassigned from ${this.name}.`);
   this.memory.taskId = null;
+  this.memory.mode = null;
 }
 
 /**
