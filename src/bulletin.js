@@ -1,5 +1,6 @@
 const Task = require('./task');
 const WorkHarvester = require('./work_harvester');
+const WorkUpgrader = require('./work_upgrader');
 
 /**
  * 定义公告板对象，用于保存和管理任务
@@ -77,6 +78,7 @@ class Bulletin {
     let worker = null;
     switch (task.taskType) {
       case TASK_HARVEST: worker = new WorkHarvester(task); break;
+      case TASK_UPGRADE: worker = new WorkUpgrader(task); break;
       default:
         log.error('Invalid task type ', task.taskType);
         break;
