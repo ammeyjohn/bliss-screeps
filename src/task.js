@@ -1,6 +1,7 @@
 $.TASK_HARVEST = 'harvest';       // 采集任务
 $.TASK_UPGRADE = 'upgrade';       // 升级控制器
 $.TASK_BUILD   = 'build';         // 升级控制器
+$.TASK_REPAIR  = 'repair';        // 修复任务
 
 /**
  * 定义任务对象

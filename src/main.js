@@ -5,6 +5,7 @@ require('./bulletin');
 require('./proto.controller');
 require('./proto.spawn');
 require('./proto.extension');
+require('./proto.wall');
 require('./proto.creep');
 
 log.debug('Server restart.');
@@ -18,11 +19,12 @@ module.exports.loop = () => {
   room.controller.population();
 
   // 遍历所有建筑，检查建筑状态，发现是否有需要处理的任务
-  const structures = room.find(FIND_MY_STRUCTURES, {
+  const structures = room.find(FIND_STRUCTURES, {
     filter: function(obj) {
       return obj.structureType == STRUCTURE_SPAWN ||
              obj.structureType == STRUCTURE_CONTROLLER ||
-             obj.structureType == STRUCTURE_EXTENSION
+             obj.structureType == STRUCTURE_EXTENSION ||
+             obj.structureType == STRUCTURE_WALL
     }
   });
   for (const idx in structures) {
