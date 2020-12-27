@@ -48,8 +48,8 @@ const findAvailSpawn = (room) => {
 StructureController.prototype.population = function() {
   // 获取房间中各种creep的数量
   let creeps_count = statCreepsInRoom(this.room);
-  // log.printObject(creeps_count);
 
+  let str = '';
   for (const r in creeps_count) {
     const cnt = creeps_count[r];
     // 如果某种creep数量小于指定的数量，则需要创建这种creep
@@ -67,6 +67,12 @@ StructureController.prototype.population = function() {
       spawn.spawnCreep(cnt.role.body, `${cnt.role.prefix}@${Game.time}`, { memory: { role: cnt.role.type }});
       log.info('Spawn creep: ', cnt.role.type);
     }
+
+    str += `,${cnt.role.type}:${cnt.count}`
+  }
+
+  if (Game.time % 10 == 0) {
+    log.info(str);
   }
 }
 

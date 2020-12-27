@@ -6,6 +6,7 @@ require('./proto.controller');
 require('./proto.spawn');
 require('./proto.extension');
 require('./proto.wall');
+require('./proto.road');
 require('./proto.creep');
 
 log.debug('Server restart.');
@@ -24,7 +25,8 @@ module.exports.loop = () => {
       return obj.structureType == STRUCTURE_SPAWN ||
              obj.structureType == STRUCTURE_CONTROLLER ||
              obj.structureType == STRUCTURE_EXTENSION ||
-             obj.structureType == STRUCTURE_WALL
+             obj.structureType == STRUCTURE_WALL ||
+             obj.structureType == STRUCTURE_ROAD
     }
   });
   for (const idx in structures) {

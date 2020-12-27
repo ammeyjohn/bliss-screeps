@@ -1,7 +1,8 @@
 global.$ = global;
 global.settings = { };
 
-// global.WALL_HITS = 30000;
+global.WALL_LEVEL_HITS = 30000;
+global.ROAD_LEVEL_HITS = 1000;
 
 global.roles = [
   {
