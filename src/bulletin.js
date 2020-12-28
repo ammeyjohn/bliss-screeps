@@ -138,9 +138,20 @@ class Bulletin {
    * 任务完成，清除任务
    * @param {*} task
    */
-  complete(task) {
-    task.hasCompleted = true;
-    log.info(`Task completed: ${task.taskId};`);
+  complete(taskId) {
+    const idx = this.tasks.findIndex(t => t.taskId == taskId);
+    if (idx > -1) {
+      const task = this.tasks[idx];
+      this.tasks.splice(idx, 1);
+      this.tasks.push(task);
+      log.info(`Task completed: ${task.taskId};`);
+
+      let str = []
+      for(const task in this.tasks) {
+        str.push(task.hasCompleted);
+      }
+      log.printObject(str);
+    }
   }
 
   /**
@@ -184,7 +195,7 @@ class Bulletin {
 
       idx -= 1;
     }
-    log.info('Task cleared.', this.tasks.length)
+    log.info('Task cleared.', this.tasks.length);
   }
 }
 

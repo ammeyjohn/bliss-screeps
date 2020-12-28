@@ -63,6 +63,10 @@ class Log {
     }
   }
 
+  canLog(level) {
+    return level >= this.level;
+  }
+
   notify (message) {
     this.alert(message);
     Game.notify(message);

@@ -22,7 +22,7 @@ module.exports = class WorkRepairer extends Worker {
     }
     if(this.executor.mode == 'repair' && this.executor.store[RESOURCE_ENERGY] == 0) {
       // 能量运送到目标后标记任务完成
-      bulletin.complete(this.task);
+      bulletin.complete(this.task.taskId);
       this.executor.unassign(this.task);
     }
 
