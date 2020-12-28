@@ -1,6 +1,7 @@
 global.$ = global;
 global.settings = { };
 
+global.DEFAULT_PRIORITY = 100;
 global.WALL_LEVEL_HITS = 30000;
 global.ROAD_LEVEL_HITS = 1000;
 
@@ -16,7 +17,7 @@ global.roles = [
 
 global.tasks = {
   'harvest': {
-    max_count: 3,
+    max_count: 5,
     max_period: 100,
     priority: 50
   },

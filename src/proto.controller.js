@@ -83,5 +83,5 @@ StructureController.prototype.population = function() {
  */
 StructureController.prototype.check = function() {
   let source = this.room.find(FIND_SOURCES)[1];
-  bulletin.publish(TASK_UPGRADE, source.id, this.id);
+  bulletin.publish(TASK_UPGRADE, source.id, this.id, $.tasks[TASK_UPGRADE].priority);
 }

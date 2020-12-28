@@ -29,7 +29,7 @@ StructureExtension.prototype.check = function() {
   if (this.store.getFreeCapacity(RESOURCE_ENERGY) > 0) {
     // 获取最近的source
     let source = this.room.find(FIND_SOURCES)[0];
-    bulletin.publish(TASK_HARVEST, source.id, this.id);
+    bulletin.publish(TASK_HARVEST, source.id, this.id, $.tasks[TASK_HARVEST].priority);
   } else {
     // 如果能量已经满了，删除公告板中的同类任务
     bulletin.reqComplete(TASK_HARVEST, this.id);

@@ -42,15 +42,16 @@ class Bulletin {
    * @param {*} taskType
    * @param {*} sourceId
    * @param {*} targetId
+   * @param {*} priority  任务优先级，默认为100，数值越高优先级越高
    * @param {*} options
    */
-  publish(taskType, sourceId, targetId, options) {
+  publish(taskType, sourceId, targetId, priority = DEFAULT_PRIORITY, options = null) {
     if (!this.canPublish(taskType, targetId)) {
       log.debug(`The count of task ${taskType} for ${targetId} has excceeded.`);
       return;
     }
-    const task = new Task(taskType, sourceId, targetId, options);
-    this.tasks.push(task);
+    const task = new Task(taskType, sourceId, targetId, priority, options);
+    this.addTask(task);
     log.info(`Task ${taskType} for ${targetId} has published. (${this.taskCount})`);
     return task;
   }
@@ -59,8 +60,31 @@ class Bulletin {
    * 向公告板添加任务
    * @param {*} task
    */
-  addTask(task) {
-    this.tasks.push(task);
+  addTask(item) {
+    let idx = 0;
+    for (let i = 0; i < this.taskCount; i++) {
+      const task = this.tasks[i];
+      // 优先级大的排在前面
+      if (item.priority > task.priority) {
+        idx = i;
+        break;
+      } else if (item.priority == task.priority) {
+        // 优先级相同的按照创建时间排列，时间小的排在前面
+        for (let j = i; j < this.taskCount; j++) {
+          const task1 = this.tasks[j];
+          if (item.priority != task1.priority) {
+            idx = j;
+            break;
+          }
+          if (item.createTime < task1.createTime) {
+            idx = j;
+            break;
+          }
+        }
+        break;
+      }
+    }
+    this.tasks.splice(idx, 0, item);
   }
 
   /**
@@ -146,12 +170,6 @@ class Bulletin {
       this.tasks.push(task);
       task.hasCompleted = true;
       log.info(`Task completed: ${task.taskId};`);
-
-      let str = []
-      for(const task in this.tasks) {
-        str.push(task.hasCompleted);
-      }
-      log.printObject(str);
     }
   }
 

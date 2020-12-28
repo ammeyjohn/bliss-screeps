@@ -41,7 +41,7 @@ module.exports.loop = () => {
   for(const idx in sites) {
     const site = sites[idx];
     let source = room.find(FIND_SOURCES)[3];
-    $.bulletin.publish(TASK_BUILD, source.id, site.id);
+    $.bulletin.publish(TASK_BUILD, source.id, site.id, $.tasks[TASK_BUILD].priority);
   }
 
   // 推动creep执行任务
