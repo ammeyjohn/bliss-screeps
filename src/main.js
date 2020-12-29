@@ -35,9 +35,8 @@ module.exports.loop = () => {
   });
   for (const idx in structures) {
     const structure = structures[idx];
-    if (structure.check) {
-      structure.check();
-    }
+    if (structure.repair) { structure.repair(); }
+    if (structure.check) { structure.check(); }
   }
 
   // 设施建造任务

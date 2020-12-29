@@ -4,7 +4,7 @@ global.structures = { };
 
 global.DEFAULT_PRIORITY = 100;
 global.WALL_LEVEL_HITS = 30000;
-global.ROAD_LEVEL_HITS = 1000;
+global.HITS_PERCENT = 0.2;
 
 global.roles = [
   {
