@@ -8,6 +8,12 @@
  * 检查建筑的血量,rug
  */
 Structure.prototype.repair = function() {
+
+  if (this.structureType == STRUCTURE_WALL) {
+    // 墙壁不需要修复
+    return;
+  }
+
   // 如果已经发布了维修任务且血量满了，则取消所有已发布任务
   if (this.data.hasRepairTask && this.hits == this.hitsMax) {
     // 如果修复完成，删除公告板中其他同类任务
