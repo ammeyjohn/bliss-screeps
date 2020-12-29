@@ -16,7 +16,10 @@ Object.defineProperty(RoomObject.prototype, 'data', {
  */
 RoomObject.prototype.getCheapSource = function() {
   if (!this.data.nearSourceId) {
-    const source = this.pos.findClosestByPath(FIND_SOURCES);
+    let source = this.pos.findClosestByPath(FIND_SOURCES);
+    if (source == null) {
+      source = this.pos.findClosestByRange(FIND_SOURCES);
+    }
     this.data.nearSourceId = source.id;
   }
   return Game.getObjectById(this.data.nearSourceId);
