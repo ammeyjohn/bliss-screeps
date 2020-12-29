@@ -12,13 +12,15 @@ require('./proto.road');
 require('./proto.creep');
 
 const Operation = require('./ops');
+const ops = new Operation();
 
 log.debug('Server restart.');
-
 
 module.exports.loop = () => {
 
   const room = _.values(Game.rooms)[0];
+  $.message['RCL'] = room.controller.level;
+  $.message['GCL'] = Game.gcl;
 
   // 房间人口管理
   room.controller.population();
@@ -55,12 +57,13 @@ module.exports.loop = () => {
 
   // 房间清理
   if (Game.time % 100 == 0) {
-
-    const ops = new Operation();
     ops.clear();
 
     // 清理公告板中已经完成的任务
     $.bulletin.clear();
   }
+
+  // 定时发送汇总邮件
+  ops.notifyProfile();
 }
 

@@ -1,6 +1,7 @@
 global.$ = global;
 global.settings = { };
 global.structures = { };
+global.message = { };
 
 global.DEFAULT_PRIORITY = 100;
 global.WALL_LEVEL_HITS = 30000;

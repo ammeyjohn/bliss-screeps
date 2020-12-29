@@ -75,6 +75,7 @@ StructureController.prototype.population = function() {
       str += `,${cnt.role.type}:${cnt.count}`
     }
     log.info(str);
+    $.message['creeps'] = str;
   }
 }
 

@@ -37,4 +37,13 @@ module.exports = class Operation {
     }
   }
 
+  /**
+   * 邮件发送整体情况
+   */
+  notifyProfile() {
+    if (Game.time % 5000) {
+      let json = JSON.stringify(global.message);
+      Game.notify(json, 0);
+    }
+  }
 }
