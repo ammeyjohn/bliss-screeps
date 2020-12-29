@@ -8,7 +8,7 @@
 StructureWall.prototype.check = function() {
   // 如果墙壁血量不足，需要发布任务修复
   if (this.hits < WALL_LEVEL_HITS) {
-    let source = this.room.find(FIND_SOURCES)[0];
+    let source = this.getCheapSource();
     bulletin.publish(TASK_REPAIR, source.id, this.id, $.tasks[TASK_REPAIR].priority);
   } else {
     // 如果修复完成，删除公告板中其他同类任务

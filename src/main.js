@@ -2,6 +2,7 @@ require('./constants');
 require('./log');
 require('./bulletin');
 // 引用扩展
+require('./proto.structure');
 require('./proto.controller');
 require('./proto.spawn');
 require('./proto.extension');

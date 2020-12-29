@@ -11,7 +11,7 @@ StructureSpawn.prototype.check = function() {
   // 能量未满，尝试发布任务
   if (this.store.getFreeCapacity(RESOURCE_ENERGY) > 0) {
     // 获取最近的source
-    let source = this.room.find(FIND_SOURCES)[0];
+    let source = this.getCheapSource();
     bulletin.publish(TASK_HARVEST, source.id, this.id, $.tasks[TASK_HARVEST].priority);
     this.memory.hasTask = true;
   } else {
