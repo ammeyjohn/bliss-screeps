@@ -11,6 +11,8 @@ require('./proto.wall');
 require('./proto.road');
 require('./proto.creep');
 
+const Operation = require('./ops');
+
 log.debug('Server restart.');
 
 
@@ -52,14 +54,11 @@ module.exports.loop = () => {
     creep.execute();
   }
 
-  // 每100ticks清理creeps缓存
+  // 房间清理
   if (Game.time % 100 == 0) {
-    for(var name in Memory.creeps) {
-      if(!Game.creeps[name]) {
-          delete Memory.creeps[name];
-          log.info('Clearing non-existing creep memory:', name);
-      }
-    }
+
+    const ops = new Operation();
+    ops.clear();
 
     // 清理公告板中已经完成的任务
     $.bulletin.clear();

@@ -167,8 +167,6 @@ class Bulletin {
     if (idx > -1) {
       const task = this.tasks[idx];
       this.tasks.splice(idx, 1);
-      this.tasks.push(task);
-      task.hasCompleted = true;
       log.info(`Task completed: ${task.taskId};`);
     }
   }
