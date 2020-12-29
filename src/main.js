@@ -2,6 +2,7 @@ require('./constants');
 require('./log');
 require('./bulletin');
 // 引用扩展
+require('./proto.roomobject');
 require('./proto.structure');
 require('./proto.controller');
 require('./proto.spawn');
@@ -41,7 +42,7 @@ module.exports.loop = () => {
   let sites = room.find(FIND_CONSTRUCTION_SITES);
   for(const idx in sites) {
     const site = sites[idx];
-    let source = room.find(FIND_SOURCES)[3];
+    let source = site.getCheapSource(site);
     $.bulletin.publish(TASK_BUILD, source.id, site.id, $.tasks[TASK_BUILD].priority);
   }
 
