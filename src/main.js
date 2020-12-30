@@ -1,6 +1,7 @@
 require('./constants');
 require('./log');
 require('./bulletin');
+require('./ops');
 // 引用扩展
 require('./proto.roomobject');
 require('./proto.structure');
@@ -9,10 +10,8 @@ require('./proto.spawn');
 require('./proto.extension');
 require('./proto.wall');
 require('./proto.road');
+require('./proto.tower');
 require('./proto.creep');
-
-const Operation = require('./ops');
-const ops = new Operation();
 
 log.debug('Server restart.');
 
@@ -32,7 +31,8 @@ module.exports.loop = () => {
              obj.structureType == STRUCTURE_CONTROLLER ||
              obj.structureType == STRUCTURE_EXTENSION ||
              obj.structureType == STRUCTURE_WALL ||
-             obj.structureType == STRUCTURE_ROAD
+             obj.structureType == STRUCTURE_ROAD ||
+             obj.structureType == STRUCTURE_TOWER;
     }
   });
   for (const idx in structures) {
@@ -56,11 +56,9 @@ module.exports.loop = () => {
   }
 
   // 房间清理
+  const ops = new Operation();
   if (Game.time % 100 == 0) {
     ops.clear();
-
-    // 清理公告板中已经完成的任务
-    $.bulletin.clear();
   }
 
   // 定时发送汇总邮件

@@ -2,13 +2,14 @@
  * 定义房间运维
  */
 
-module.exports = class Operation {
+class Operation {
 
   /**
    * 执行房间清理工作
    * @param {*} room
    */
   clear(room) {
+    this.clearBulletin();
     this.clearGlobalStructure();
     this.clearMemoryCreep();
   }
@@ -28,13 +29,23 @@ module.exports = class Operation {
     }
   }
 
-  clearMemoryCreep(room) {
+  /**
+   * 清理所有已经死亡的creep数据
+   */
+  clearMemoryCreep() {
     for(var name in Memory.creeps) {
       if(!Game.creeps[name]) {
           delete Memory.creeps[name];
           log.info('Clearing non-existing creep memory:', name);
       }
     }
+  }
+
+  /**
+   * 清理公告板数据
+   */
+  clearBulletin() {
+    $.bulletin.clear();
   }
 
   /**
@@ -47,3 +58,5 @@ module.exports = class Operation {
     }
   }
 }
+
+global.ops = new Operation();

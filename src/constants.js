@@ -18,6 +18,11 @@ global.roles = [
 ];
 
 global.tasks = {
+  'attack': {
+    max_count: 999,
+    max_period: 100,
+    priority: 99999
+  },
   'harvest': {
     max_count: 5,
     max_period: 100,
