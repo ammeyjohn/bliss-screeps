@@ -33,7 +33,7 @@ Creep.prototype.unassign = function() {
  */
 Creep.prototype.abandon = function() {
   this.memory.taskId = null;
-  log.info(`${this.name} abandoned task.`);
+  log.info(`Task abandoned: ${this.name}`);
 }
 
 /**

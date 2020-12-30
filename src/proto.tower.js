@@ -13,7 +13,7 @@ StructureTower.prototype.check = function() {
     bulletin.publish(TASK_HARVEST, source.id, this.id, $.tasks[TASK_HARVEST].priority);
     this.data.hasTask = true;
   } else {
-    if (this.memory.hasTask) {
+    if (this.data.hasTask) {
       // 如果能量已经满了，删除公告板中的同类任务
       bulletin.reqComplete(TASK_HARVEST, this.id);
       this.data.hasTask = false;

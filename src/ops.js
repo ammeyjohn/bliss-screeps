@@ -52,7 +52,7 @@ class Operation {
    * 邮件发送整体情况
    */
   notifyProfile(room) {
-    if (Game.time % 5000) {
+    if (Game.time % 5000 == 0) {
       $.message['RCL'] = room.controller.level;
       $.message['GCL'] = Game.gcl;
       let json = JSON.stringify($.message);
