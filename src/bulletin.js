@@ -53,7 +53,7 @@ class Bulletin {
     }
     const task = new Task(taskType, sourceId, targetId, priority, options);
     this.addTask(task);
-    log.info(`Task ${taskType} for ${targetId} has published. (${this.taskCount})`);
+    log.info(`Task published: ${taskType} for ${targetId}. (${this.taskCount})`);
     return task;
   }
 
@@ -169,6 +169,11 @@ class Bulletin {
         // 将任务分配给creep
         creep.assign(task);
         task.executorId = creep.id;
+
+        log.info(`Task assigned: ${task.taskId} ==> ${creep.name}`);
+
+        $.profile['assigned_task_count'] += 1;
+        $.profile['assigned_task_time'] += (Game.time - task.createTime);
       }
 
     }
@@ -184,6 +189,9 @@ class Bulletin {
       const task = this.tasks[idx];
       this.tasks.splice(idx, 1);
       log.info(`Task completed: ${task.taskId};`);
+
+      $.profile['completed_task_count'] += 1;
+      $.profile['completed_task_time'] += (Game.time - task.createTime);
     }
   }
 

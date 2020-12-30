@@ -2,6 +2,12 @@ global.$ = global;
 global.settings = { };
 global.structures = { };
 global.message = { };
+global.profile = {
+  assigned_task_count: 0,
+  assigned_task_time: 0,
+  completed_task_count: 0,
+  completed_task_time: 0
+};
 
 global.DEFAULT_PRIORITY = 100;
 global.WALL_LEVEL_HITS = 30000;

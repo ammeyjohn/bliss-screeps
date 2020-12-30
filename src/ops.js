@@ -52,9 +52,15 @@ class Operation {
    * 邮件发送整体情况
    */
   notifyProfile(room) {
+    $.message['RCL'] = room.controller.level;
+    $.message['GCL'] = Game.gcl;
+    $.message['avg_assign'] = $.profile.assigned_task_time / $.profile.assigned_task_count;
+    $.message['avg_complete'] = $.profile.completed_task_time / $.profile.completed_task_count;
+    if (Game.time % 10 == 0) {
+      let json = JSON.stringify($.message);
+      $.log.info(json);
+    }
     if (Game.time % 5000 == 0) {
-      $.message['RCL'] = room.controller.level;
-      $.message['GCL'] = Game.gcl;
       let json = JSON.stringify($.message);
       Game.notify(json, 0);
     }
