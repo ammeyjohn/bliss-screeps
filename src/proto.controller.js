@@ -86,23 +86,3 @@ StructureController.prototype.check = function() {
   let source = this.getCheapSource();
   bulletin.publish(TASK_UPGRADE, source.id, this.id, $.tasks[TASK_UPGRADE].priority);
 }
-
-/**
- * 检索房间内是否有入侵者
- */
-StructureController.prototype.defence = function() {
-  const hostileCreeps = this.room.find(FIND_HOSTILE_CREEPS);
-  for (const name in hostileCreeps) {
-    // 检测到有入侵者，发布攻击任务
-    const hostile = hostileCreeps[name];
-    // 查找入侵者附件是否有防御塔
-    const tower = hostile.pos.findClosestByRange(FIND_MY_STRUCTURES, {
-      filter: function(obj) {
-          return obj.structureType == STRUCTURE_TOWER
-      }
-    });
-    if (tower) {
-      bulletin.publish(TASK_ATTACK, tower.id, hostile.id, $.tasks[TASK_ATTACK].priority);
-    }
-  }
-}

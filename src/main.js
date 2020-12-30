@@ -18,11 +18,20 @@ log.debug('Server restart.');
 module.exports.loop = () => {
 
   const room = _.values(Game.rooms)[0];
-  $.message['RCL'] = room.controller.level;
-  $.message['GCL'] = Game.gcl;
 
   // 房间人口管理
   room.controller.population();
+
+  // 所有炮塔进行防御
+  const towers = room.find(FIND_STRUCTURES, {
+    filter: function(obj) {
+      return obj.structureType == STRUCTURE_TOWER;
+    }
+  });
+  for (const idx in towers) {
+    const tower = towers[idx];
+    tower.defence();
+  }
 
   // 遍历所有建筑，检查建筑状态，发现是否有需要处理的任务
   const structures = room.find(FIND_STRUCTURES, {
@@ -56,12 +65,11 @@ module.exports.loop = () => {
   }
 
   // 房间清理
-  const ops = new Operation();
   if (Game.time % 100 == 0) {
     ops.clear();
   }
 
   // 定时发送汇总邮件
-  ops.notifyProfile();
+  ops.notifyProfile(room);
 }
 

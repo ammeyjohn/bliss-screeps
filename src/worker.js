@@ -5,9 +5,6 @@
 module.exports = class Worker {
   constructor(task) {
     this.task = task;
-    this._source = null;
-    this._target = null;
-    this._executor = null;
   }
 
   get taskId() {
@@ -23,10 +20,7 @@ module.exports = class Worker {
   }
 
   get source() {
-    if (this._source == null) {
-      this._source = Game.getObjectById(this.sourceId);
-    }
-    return this._source;
+    return Game.getObjectById(this.sourceId);
   }
 
   get targetId() {
@@ -34,10 +28,7 @@ module.exports = class Worker {
   }
 
   get target() {
-    if (this._target == null) {
-      this._target = Game.getObjectById(this.targetId);
-    }
-    return this._target;
+    return Game.getObjectById(this.targetId);
   }
 
   get executorId() {
@@ -48,10 +39,7 @@ module.exports = class Worker {
   }
 
   get executor() {
-    if (this._executor == null) {
-      this._executor = Game.getObjectById(this.executorId);
-    }
-    return this._executor;
+    return Game.getObjectById(this.executorId);
   }
 
   get options() {
@@ -77,11 +65,8 @@ module.exports = class Worker {
    * 验证任务是否有效
    */
   isValid() {
-    const s = Game.getObjectById(this.sourceId);
-    if (s == null) { return false; }
-
-    const t = Game.getObjectById(this.targetId);
-    if (t == null) { return false; }
+    if (this.source == null) { return false; }
+    if (this.target == null) { return false; }
     return true;
   }
 
@@ -89,7 +74,7 @@ module.exports = class Worker {
    * 执行任务。任务执行成功返回true，否则返回false。
    */
   execute() {
-    log.warning('Abstract task.');
+    log.warning('Nothing execute.');
     return false;
   }
 }
