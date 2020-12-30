@@ -19,6 +19,34 @@ Object.defineProperty(Creep.prototype, 'mode', {
   }
 });
 
+Object.defineProperty(Creep.prototype, 'assigned', {
+  get: function() {
+    return this.memory.taskId != null;
+  }
+});
+
+/**
+ * 确定某种任务是否可以分配给当前creep
+ */
+Creep.prototype.canAssign = function(task) {
+  if (this.spawning) { return false; }
+  if (this.memory.taskId != null) { return false; }
+  if (task.taskType == TASK_ATTACK) {
+    // 需要攻击组件
+    return this.getActiveBodyparts(ATTACK) > 0;
+  }
+
+  return true;
+}
+
+/**
+ * 向当前creep分配任务
+ * @param {*} task
+ */
+Creep.prototype.assign = function(task) {
+  this.memory.taskId = task.taskId;
+}
+
 /**
  * 清除已经分配的任务
  */
@@ -42,19 +70,7 @@ Creep.prototype.abandon = function() {
 Creep.prototype.execute = function() {
   // 孵化中不执行任务
   if (this.spawning) { return; }
-  if (!this.memory.taskId) {
-    // 向公告板请求任务
-    this.worker = $.bulletin.reqTask();
-    if (this.worker) {
-      this.worker.dispatch(this.id);
-      this.memory.taskId = this.worker.taskId;
-      log.info(`Task ${this.worker.taskType} has assigned to ${this.name}.`);
-    }
-  }
-
-  if (this.memory.taskId == null) {
-    return;
-  }
+  if (this.memory.taskId == null) { return; }
 
   const worker = this.curTask;
   if (worker == null) {

@@ -143,21 +143,35 @@ class Bulletin {
   }
 
   /**
-   * 请求任务，返回第一个有效的任务
+   * 分配任务
    */
-  reqTask() {
-    if (this.taskCount == 0) {
-      return null;
-    }
-    let task = _.find(this.tasks, t => t.executorId == null && t.hasCompleted == false);
-    if (task) {
-      let worker = this.createWorker(task);
-      if (!worker) {
-        task.hasCompleted = true;
+  dispatch() {
+    for (let task of this.tasks) {
+      if (task.executorId != null || task.hasCompleted) {
+        continue;
       }
-      return worker;
+
+      const source = Game.getObjectById(task.sourceId);
+      if (source == null) {
+        task.hasCompleted = true;
+        continue;
+      }
+
+      // 获取最近的空闲creep
+      const creep = source.pos.findClosestByPath(FIND_MY_CREEPS, {
+        filter: function(obj) {
+          // 未分配任务，且可以接收当前任务
+          return !obj.assigned && obj.canAssign(task);
+        }
+      });
+
+      if (creep != null) {
+        // 将任务分配给creep
+        creep.assign(task);
+        task.executorId = creep.id;
+      }
+
     }
-    return null
   }
 
   /**

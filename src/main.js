@@ -33,6 +33,12 @@ module.exports.loop = () => {
     tower.defence();
   }
 
+  // 推动creep执行任务
+  for (let name in Game.creeps) {
+    let creep = Game.creeps[name];
+    creep.execute();
+  }
+
   // 遍历所有建筑，检查建筑状态，发现是否有需要处理的任务
   const structures = room.find(FIND_STRUCTURES, {
     filter: function(obj) {
@@ -58,11 +64,8 @@ module.exports.loop = () => {
     $.bulletin.publish(TASK_BUILD, source.id, site.id, $.tasks[TASK_BUILD].priority);
   }
 
-  // 推动creep执行任务
-  for (let name in Game.creeps) {
-    let creep = Game.creeps[name];
-    creep.execute();
-  }
+  // 为creep分配任务
+  $.bulletin.dispatch();
 
   // 房间清理
   if (Game.time % 100 == 0) {

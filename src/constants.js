@@ -20,7 +20,6 @@ global.roles = [
 global.tasks = {
   'harvest': {
     max_count: 5,
-    max_period: 100,
     priority: 125
   },
   'upgrade': {
