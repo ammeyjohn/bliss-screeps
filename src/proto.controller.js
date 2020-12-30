@@ -13,7 +13,7 @@ const statCreepsInRoom = (room) => {
   let creeps_count = { };
   for (const role of global.roles) {
     creeps_count[role.type] = {
-      role: role,
+      role: role.type,
       count: 0
     };
   }
@@ -43,39 +43,28 @@ const findAvailSpawn = (room) => {
 }
 
 /**
- * 房间人口管理
+ * 孵化creep
  */
-StructureController.prototype.population = function() {
-  // 获取房间中各种creep的数量
-  let creeps_count = statCreepsInRoom(this.room);
-
-  for (const r in creeps_count) {
-    const cnt = creeps_count[r];
-    // 如果某种creep数量小于指定的数量，则需要创建这种creep
-    if (cnt.count < cnt.role.min_count) {
-      if (this.room.energyAvailable < cnt.role.energy) {
-        // 如果房间能量不够，那么本次不创建
-        continue;
-      }
-      // 获取可用的spawn，即未在孵化的spawn
-      const spawn = findAvailSpawn(this.room);
-      if (!spawn) {
-        // 如果无法获取到可用的spawn，那么本次不创建creep
-        return;
-      }
-      spawn.spawnCreep(cnt.role.body, `${cnt.role.prefix}@${Game.time}`, { memory: { role: cnt.role.type }});
-      log.info('Spawn creep: ', cnt.role.type);
+StructureController.prototype.incubate = function() {
+  for(const role of $.roles) {
+    if (role.energy > this.room.energyAvailable) {
+      continue;
     }
-  }
-
-  if (Game.time % 20 == 0) {
-    let str = '';
-    for (const r in creeps_count) {
-      const cnt = creeps_count[r];
-      str += `,${cnt.role.type}:${cnt.count}`
+    const spawn = findAvailSpawn(this.room);
+    if (!spawn) {
+      // 如果无法获取到可用的spawn，那么本次不创建creep
+      return;
     }
-    log.info(str);
-    $.message['creeps'] = str;
+    spawn.spawnCreep(role.body, `${role.prefix}@${Game.time}`);
+    log.info('Spawn creep: ', role.type);
+
+    if (Game.time % 20 == 0) {
+      const count = statCreepsInRoom(this.room);
+      log.info(JSON.stringify(count));
+      $.message['creeps'] = count;
+    }
+
+    return;
   }
 }
 

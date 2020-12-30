@@ -164,6 +164,11 @@ class Bulletin {
           return !obj.assigned && obj.canAssign(task);
         }
       });
+      if (creep == null) {
+        // 如果无法分配到creep执行任务，请求控制器创建
+        source.room.controller.incubate();
+        continue;
+      }
 
       if (creep != null) {
         // 将任务分配给creep

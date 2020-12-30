@@ -10,14 +10,19 @@ global.profile = {
 };
 
 global.DEFAULT_PRIORITY = 100;
-global.WALL_LEVEL_HITS = 30000;
+global.WALL_LEVEL_HITS = 100000;
 global.HITS_PERCENT = 0.2;
 
 global.roles = [
   {
+    prefix: 'stronger',      // 名称前缀
+    type: 'stronger',        // 角色类型
+    energy: 400,             // 所需能量
+    body: [WORK,WORK,CARRY,CARRY,MOVE,MOVE]  // 创建身体部件
+  },
+  {
     prefix: 'normal',        // 名称前缀
     type: 'normal',          // 角色类型
-    min_count: 13,           // 最少数量
     energy: 200,             // 所需能量
     body: [WORK,CARRY,MOVE]  // 创建身体部件
   }

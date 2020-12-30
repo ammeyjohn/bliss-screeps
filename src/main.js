@@ -20,7 +20,7 @@ module.exports.loop = () => {
   const room = _.values(Game.rooms)[0];
 
   // 房间人口管理
-  room.controller.population();
+  // room.controller.population();
 
   // 所有炮塔进行防御
   const towers = room.find(FIND_STRUCTURES, {
