@@ -28,9 +28,11 @@ StructureTower.prototype.defence = function() {
   if (this.store.getUsedCapacity(RESOURCE_ENERGY) == 0) {
     return;
   }
-  const hostileCreeps = this.room.find(FIND_HOSTILE_CREEPS);
-  if (hostileCreeps.length > 0) {
-    const target = hostileCreeps[0];
+  let target = this.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
+  if (target == null) {
+    target = this.pos.findClosestByRange(FIND_HOSTILE_STRUCTURES);
+  }
+  if (target != null) {
     this.attack(target)
   }
 }
