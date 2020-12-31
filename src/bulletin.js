@@ -3,7 +3,7 @@ const WorkHarvester = require('./work_harvester');
 const WorkUpgrader = require('./work_upgrader');
 const WorkBuilder = require('./work_builder');
 const WorkRepairer = require('./work_repairer');
-// const WorkAttacker = require('./work_attacker');
+const WorkTransporter = require('./work_transporter');
 
 /**
  * 定义公告板对象，用于保存和管理任务
@@ -107,6 +107,7 @@ class Bulletin {
       case TASK_UPGRADE: worker = new WorkUpgrader(task); break;
       case TASK_BUILD: worker = new WorkBuilder(task); break;
       case TASK_REPAIR: worker = new WorkRepairer(task); break;
+      case TASK_TRANSPORT: worker = new WorkTransporter(task); break;
       // case TASK_ATTACK: worker = new WorkAttacker(task); break;
       default:
         log.error('Invalid task type ', task.taskType);

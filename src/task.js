@@ -3,6 +3,7 @@ $.TASK_UPGRADE = 'upgrade';       // 升级控制器
 $.TASK_BUILD   = 'build';         // 升级控制器
 $.TASK_REPAIR  = 'repair';        // 修复任务
 $.TASK_ATTACK  = 'attack';        // 攻击任务
+$.TASK_TRANSPORT  = 'transport';  // 运送任务
 
 /**
  * 定义任务对象

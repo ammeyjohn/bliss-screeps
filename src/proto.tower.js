@@ -8,14 +8,21 @@
 StructureTower.prototype.check = function() {
   // 能量未满，尝试发布任务
   if (this.store.getFreeCapacity(RESOURCE_ENERGY) > 0) {
-    // 获取最近的source
-    let source = this.getCheapSource();
-    bulletin.publish(TASK_HARVEST, source.id, this.id, $.tasks[TASK_HARVEST].priority);
-    this.data.hasTask = true;
+    // 查看是否有storage，并且能量大于当前需要
+    let source = this.getStructureByType(STRUCTURE_STORAGE);
+    if (source == null) {
+      // 如果不存在storage，从能量源采集
+      // 获取最近的source
+      source = this.getCheapSource();
+    }
+    if (source != null) {
+      bulletin.publish(TASK_TRANSPORT, source.id, this.id, $.tasks[TASK_TRANSPORT].priority);
+      this.data.hasTask = true;
+    }
   } else {
     if (this.data.hasTask) {
       // 如果能量已经满了，删除公告板中的同类任务
-      bulletin.reqComplete(TASK_HARVEST, this.id);
+      bulletin.reqComplete(TASK_TRANSPORT, this.id);
       this.data.hasTask = false;
     }
   }

@@ -31,7 +31,7 @@ global.roles = [
 global.tasks = {
   'harvest': {
     max_count: 5,
-    priority: 125
+    priority: 200
   },
   'upgrade': {
     max_count: 2,
@@ -48,4 +48,8 @@ global.tasks = {
     max_period: 100,
     priority: 100
   },
+  'transport': {
+    max_count: 5,
+    priority: 150
+  }
 };

@@ -24,3 +24,13 @@ RoomObject.prototype.getCheapSource = function() {
   }
   return Game.getObjectById(this.data.nearSourceId);
 }
+
+/**
+* 获取当前房间中的指定类型建筑
+*/
+RoomObject.prototype.getStructureByType = function(structureType) {
+  const structures = this.room.find(FIND_MY_STRUCTURES, {
+    filter: { structureType: structureType }
+  });
+  return structures.length > 0 ? structures[0] : null;
+}
