@@ -2,6 +2,8 @@
  * 定义所有建筑类的扩展，用于放置基础方法
  */
 
+const { log } = require("console");
+
 /**
  * 检查能量是否已经充足，未充足则发布采集任务
  */
@@ -10,15 +12,39 @@ Structure.prototype.check = function() {
 
   // 能量未满，尝试发布任务
   if (this.store.getFreeCapacity(RESOURCE_ENERGY) > 0) {
-    // 获取最近的source
-    let source = this.getCheapSource();
+    // container只能从source采集
+    // storage可以从container收集或者从source采集
+    // 其他建筑在storage满的情况下从storage收集，否则可以从source采集
+    let source = null;
+    if (this.structureType == STRUCTURE_CONTAINER) {
+      source = this.getCheapSource();
+    } else if (this.structureType == STRUCTURE_STORAGE) {
+      source = this.pos.findClosestByRange(FIND_MY_STRUCTURES, {
+        filter: function(obj) {
+          return obj.structureType == STRUCTURE_CONTAINER &&
+                 obj.store.getUsedCapacity() > 0;
+        }
+      });
+      if (source == null) {
+        source = this.getCheapSource();
+      }
+    } else {
+      source = this.getCheapStorage();
+      if (source == null) {
+        source = this.getCheapSource();
+      }
+    }
+    if (source == null) {
+      log.debug('Cannot find source for ', this.id);
+      return;
+    }
     bulletin.publish(TASK_HARVEST, source.id, this.id, $.tasks[TASK_HARVEST].priority);
-    this.data.hasTask = true;
+    this.data.hasHarvestTask = true;
   } else {
     if (this.data.hasTask) {
       // 如果能量已经满了，删除公告板中的同类任务
       bulletin.reqComplete(TASK_HARVEST, this.id);
-      this.data.hasTask = false;
+      this.data.hasHarvestTask = false;
     }
   }
 }

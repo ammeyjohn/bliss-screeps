@@ -15,38 +15,48 @@ Object.defineProperty(RoomObject.prototype, 'data', {
  * 获取到达当前建筑代价最小的能量点
  */
 RoomObject.prototype.getCheapSource = function() {
-  if (!this.data.nearSourceId) {
+  if (!this.data.closestSource) {
     let source = this.pos.findClosestByRange(FIND_SOURCES_ACTIVE);
-    this.data.nearSourceId = source.id;
+    this.data.closestSource = {
+      id: source.id,
+      type: SOURCE
+    }
   }
-  return Game.getObjectById(this.data.nearSourceId);
+  if (this.data.closestSource) {
+    return Game.getObjectById(this.data.closestSource.id);
+  }
+  return null;
 }
 
 /**
  * 获取到达当前建筑代价最小的能量存储点
  */
 RoomObject.prototype.getCheapStorage = function() {
-  if (this.data.nearSourceId) {
-    // 检查最近的能源是否为空
-    const source = Game.getObjectById(this.data.nearSourceId);
-    if (source && source.store.getUsedCapacity() == 0) {
-      this.data.nearSourceId = null;
+  if (this.data.closestSource) {
+    if (this.data.closestSource.type != SOURCE) {
+      // 检查最近的能源存储是否为空
+      const storage = Game.getObjectById(this.data.closestSource.id);
+      if (storage && storage.store.getUsedCapacity() == 0) {
+        this.data.closestSource = null;
+      }
     }
   }
-  if (!this.data.nearSourceId) {
-    let source = this.pos.findClosestByRange(FIND_MY_STRUCTURES, {
+  if (!this.data.closestSource) {
+    let storage = this.pos.findClosestByRange(FIND_MY_STRUCTURES, {
       filter: function(obj) {
         return (obj.structureType == STRUCTURE_STORAGE ||
-               obj.structureType == STRUCTURE_CONTAINER) &&
-               obj.store.getUsedCapacity() > 0;
+                obj.structureType == STRUCTURE_CONTAINER) &&
+                obj.store.getUsedCapacity() > 0;
       }
     });
-    if (source == null) {
-      source = this.pos.findClosestByRange(FIND_SOURCES_ACTIVE);
+    if (storage != null) {
+      this.data.closestSource = {
+        id: source.id,
+        type: source.structureType
+      }
     }
-    this.data.nearSourceId = source.id;
   }
-  return Game.getObjectById(this.data.nearSourceId);
+  return Game.getObjectById(this.data.closestSource.id);
 }
 
 /**

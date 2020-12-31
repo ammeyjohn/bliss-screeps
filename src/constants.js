@@ -9,6 +9,8 @@ global.profile = {
   completed_task_time: 0
 };
 
+global.SOURCE = 'source';
+
 global.DEFAULT_PRIORITY = 100;
 global.WALL_LEVEL_HITS = 100000;
 global.HITS_PERCENT = 0.2;
