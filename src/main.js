@@ -6,10 +6,7 @@ require('./ops');
 require('./proto.roomobject');
 require('./proto.structure');
 require('./proto.controller');
-require('./proto.spawn');
-require('./proto.extension');
 require('./proto.wall');
-require('./proto.road');
 require('./proto.tower');
 require('./proto.creep');
 
