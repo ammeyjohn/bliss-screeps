@@ -15,10 +15,23 @@ Object.defineProperty(RoomObject.prototype, 'data', {
  * 获取到达当前建筑代价最小的能量点
  */
 RoomObject.prototype.getCheapSource = function() {
+  if (this.data.nearSourceId) {
+    // 检查最近的能源是否为空
+    const source = Game.getObjectById(this.data.nearSourceId);
+    if (source && source.store.getUsedCapacity() == 0) {
+      this.data.nearSourceId = null;
+    }
+  }
   if (!this.data.nearSourceId) {
-    let source = this.pos.findClosestByPath(FIND_SOURCES);
+    let source = this.pos.findClosestByRange(FIND_MY_STRUCTURES, {
+      filter: function(obj) {
+        return (obj.structureType == STRUCTURE_STORAGE ||
+               obj.structureType == STRUCTURE_CONTAINER) &&
+               obj.store.getUsedCapacity() > 0;
+      }
+    });
     if (source == null) {
-      source = this.pos.findClosestByRange(FIND_SOURCES);
+      source = this.pos.findClosestByRange(FIND_SOURCES_ACTIVE);
     }
     this.data.nearSourceId = source.id;
   }
