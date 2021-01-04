@@ -2,8 +2,6 @@
  * 定义所有建筑类的扩展，用于放置基础方法
  */
 
-const { log } = require("console");
-
 /**
  * 检查能量是否已经充足，未充足则发布采集任务
  */
@@ -15,25 +13,34 @@ Structure.prototype.check = function() {
     // container只能从source采集
     // storage可以从container收集或者从source采集
     // 其他建筑在storage满的情况下从storage收集，否则可以从source采集
-    let source = null;
-    if (this.structureType == STRUCTURE_CONTAINER) {
-      source = this.getCheapSource();
-    } else if (this.structureType == STRUCTURE_STORAGE) {
-      source = this.pos.findClosestByRange(FIND_MY_STRUCTURES, {
-        filter: function(obj) {
-          return obj.structureType == STRUCTURE_CONTAINER &&
-                 obj.store.getUsedCapacity() > 0;
-        }
-      });
-      if (source == null) {
-        source = this.getCheapSource();
-      }
-    } else {
-      source = this.getCheapStorage();
-      if (source == null) {
-        source = this.getCheapSource();
-      }
-    }
+    // let source = null;
+    // let taskType = null;
+    // if (this.structureType == STRUCTURE_CONTAINER) {
+    //   source = this.getCheapSource();
+    //   taskType = TASK_HARVEST;
+    // } else if (this.structureType == STRUCTURE_STORAGE) {
+    //   source = this.pos.findClosestByRange(FIND_MY_STRUCTURES, {
+    //     filter: function(obj) {
+    //       return obj.structureType == STRUCTURE_CONTAINER &&
+    //              obj.store.getUsedCapacity() > 0;
+    //     }
+    //   });
+    //   if (source == null) {
+    //     source = this.getCheapSource();
+    //     taskType = TASK_HARVEST;
+    //   } else {
+    //     taskType = TASK_TRANSPORT;
+    //   }
+    // } else {
+    //   source = this.getCheapStorage();
+    //   if (source == null) {
+
+    //     taskType = TASK_HARVEST;
+    //   } else {
+    //     taskType = TASK_TRANSPORT;
+    //   }
+    // }
+    let source = this.getCheapSource();
     if (source == null) {
       log.debug('Cannot find source for ', this.id);
       return;
@@ -41,16 +48,14 @@ Structure.prototype.check = function() {
     bulletin.publish(TASK_HARVEST, source.id, this.id, $.tasks[TASK_HARVEST].priority);
     this.data.hasHarvestTask = true;
   } else {
-    if (this.data.hasTask) {
-      // 如果能量已经满了，删除公告板中的同类任务
-      bulletin.reqComplete(TASK_HARVEST, this.id);
-      this.data.hasHarvestTask = false;
-    }
+    // 如果能量已经满了，删除公告板中的同类任务
+    bulletin.reqComplete(TASK_HARVEST, this.id);
+    this.data.hasHarvestTask = false;
   }
 }
 
 /**
- * 检查建筑的血量,rug
+ * 检查建筑的血量
  */
 Structure.prototype.repair = function() {
 

@@ -51,12 +51,14 @@ RoomObject.prototype.getCheapStorage = function() {
     });
     if (storage != null) {
       this.data.closestSource = {
-        id: source.id,
-        type: source.structureType
+        id: storage.id,
+        type: storage.structureType
       }
+      return Game.getObjectById(this.data.closestSource.id);
     }
   }
-  return Game.getObjectById(this.data.closestSource.id);
+
+  return null;
 }
 
 /**

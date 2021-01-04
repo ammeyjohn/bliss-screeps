@@ -8,24 +8,6 @@ Object.defineProperty(StructureController.prototype, 'name', {
   }
 });
 
-/* 统计某个房间内各类Creep数量 */
-const statCreepsInRoom = (room) => {
-  let creeps_count = { };
-  for (const role of global.roles) {
-    creeps_count[role.type] = {
-      role: role.type,
-      count: 0
-    };
-  }
-  for (const name in Game.creeps) {
-    const creep = Game.creeps[name];
-    if (creeps_count[creep.memory.role]) {
-      creeps_count[creep.memory.role].count += 1;
-    }
-  }
-  return creeps_count;
-}
-
 /**
  * 从房间查找可用的Spawn
  * 未在孵化的spawn

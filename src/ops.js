@@ -56,6 +56,7 @@ class Operation {
     $.message['GCL'] = Game.gcl;
     $.message['avg_assign'] = $.profile.assigned_task_time / $.profile.assigned_task_count;
     $.message['avg_complete'] = $.profile.completed_task_time / $.profile.completed_task_count;
+    $.message['creeps'] = $.profile.creeps;
     if (Game.time % 10 == 0) {
       let json = JSON.stringify($.message);
       $.log.info(json);
@@ -64,6 +65,22 @@ class Operation {
       let json = JSON.stringify($.message);
       Game.notify(json, 0);
     }
+  }
+
+  /* 统计某个房间内各类Creep数量 */
+  statCreepsInRoom(room) {
+    let creeps_count = { };
+    for (const role of global.roles) {
+      creeps_count[role.type] = { count: 0 };
+    }
+    for (const name in Game.creeps) {
+      const creep = Game.creeps[name];
+      if (creeps_count[creep.memory.role]) {
+        creeps_count[creep.memory.role].count += 1;
+      }
+    }
+    $.profile['creeps'] = creeps_count;
+    return creeps_count;
   }
 }
 
