@@ -6,51 +6,55 @@
  * 检查能量是否已经充足，未充足则发布采集任务
  */
 Structure.prototype.check = function() {
+  switch(this.structureType) {
+    case STRUCTURE_CONTAINER:
+      // container只能从source采集
+      this.checkEnergy(TASK_HARVEST);
+      break;
+    default:
+      // storage可以从container收集或者从source采集
+      // 其他建筑在storage满的情况下从storage收集，否则可以从source采集
+      this.checkEnergy(TASK_TRANSPORT);
+      break;
+  }
+}
+
+/**
+ * 检查能量是否已经充足，未充足则发布采集任务
+ */
+Structure.prototype.checkEnergy = function(taskType) {
   if (!this.store) { return; }
 
   // 能量未满，尝试发布任务
   if (this.store.getFreeCapacity(RESOURCE_ENERGY) > 0) {
-    // container只能从source采集
-    // storage可以从container收集或者从source采集
-    // 其他建筑在storage满的情况下从storage收集，否则可以从source采集
-    // let source = null;
-    // let taskType = null;
-    // if (this.structureType == STRUCTURE_CONTAINER) {
-    //   source = this.getCheapSource();
-    //   taskType = TASK_HARVEST;
-    // } else if (this.structureType == STRUCTURE_STORAGE) {
-    //   source = this.pos.findClosestByRange(FIND_MY_STRUCTURES, {
-    //     filter: function(obj) {
-    //       return obj.structureType == STRUCTURE_CONTAINER &&
-    //              obj.store.getUsedCapacity() > 0;
-    //     }
-    //   });
-    //   if (source == null) {
-    //     source = this.getCheapSource();
-    //     taskType = TASK_HARVEST;
-    //   } else {
-    //     taskType = TASK_TRANSPORT;
-    //   }
-    // } else {
-    //   source = this.getCheapStorage();
-    //   if (source == null) {
-
-    //     taskType = TASK_HARVEST;
-    //   } else {
-    //     taskType = TASK_TRANSPORT;
-    //   }
-    // }
-    let source = this.getCheapSource();
-    if (source == null) {
-      log.debug('Cannot find source for ', this.id);
-      return;
+    let ratio = this.store[RESOURCE_ENERGY] / this.store.getCapacity(RESOURCE_ENERGY);
+    if (taskType == TASK_HARVEST) {
+      let source = this.getCheapSource();
+      if (source == null) {
+        log.debug('Cannot find source for ', this.id);
+        return;
+      }
+      let priority = $.tasks[TASK_HARVEST].priority / ratio;
+      bulletin.publish(TASK_HARVEST, source.id, this.id, priority);
+      this.data.hasHarvestTask = true;
+    } else if (taskType == TASK_TRANSPORT) {
+      let storage = this.getCheapStorage();
+      if (storage == null) {
+        log.debug('Cannot find storage for ', this.id);
+        return;
+      }
+      let priority = $.tasks[TASK_HARVEST].priority / ratio;
+      bulletin.publish(TASK_TRANSPORT, storage.id, this.id, priority);
+      this.data.hasHarvestTask = true;
     }
-    bulletin.publish(TASK_HARVEST, source.id, this.id, $.tasks[TASK_HARVEST].priority);
-    this.data.hasHarvestTask = true;
   } else {
-    // 如果能量已经满了，删除公告板中的同类任务
-    bulletin.reqComplete(TASK_HARVEST, this.id);
-    this.data.hasHarvestTask = false;
+    if (this.data.hasHarvestTask || this.data.hasTransportTask) {
+      // 如果能量已经满了，删除公告板中的同类任务
+      bulletin.reqComplete(TASK_HARVEST, this.id);
+      bulletin.reqComplete(TASK_TRANSPORT, this.id);
+      this.data.hasHarvestTask = false;
+      this.data.hasTransportTask = false;
+    }
   }
 }
 

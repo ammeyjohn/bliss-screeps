@@ -17,7 +17,8 @@ module.exports = class WorkTransporter extends WorkHarvester {
     if (this.source instanceof Source) {
       // 如果能量源为Source，那么执行采集过程
       super.execute();
-    } else if (this.source.structureType == STRUCTURE_STORAGE) {
+    } else if (this.source.structureType == STRUCTURE_STORAGE ||
+               this.source.structureType == STRUCTURE_CONTAINER) {
       // 能量源为Storage
       if(this.executor.store.getFreeCapacity() > 0) {
         if(this.executor.withdraw(this.source, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {

@@ -6,8 +6,9 @@ require('./ops');
 require('./proto.roomobject');
 require('./proto.structure');
 require('./proto.controller');
-require('./proto.wall');
+require('./proto.storage');
 require('./proto.tower');
+require('./proto.wall');
 require('./proto.creep');
 
 log.debug('Server restart.');
@@ -40,6 +41,8 @@ module.exports.loop = () => {
   const structures = room.find(FIND_STRUCTURES, {
     filter: function(obj) {
       return obj.structureType == STRUCTURE_SPAWN ||
+             obj.structureType == STRUCTURE_CONTAINER ||
+             obj.structureType == STRUCTURE_STORAGE ||
              obj.structureType == STRUCTURE_CONTROLLER ||
              obj.structureType == STRUCTURE_EXTENSION ||
              obj.structureType == STRUCTURE_WALL ||
