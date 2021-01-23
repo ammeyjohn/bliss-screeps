@@ -6,6 +6,7 @@ require('./ops');
 require('./proto.roomobject');
 require('./proto.structure');
 require('./proto.controller');
+require('./proto.container');
 require('./proto.storage');
 require('./proto.tower');
 require('./proto.wall');

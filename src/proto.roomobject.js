@@ -4,7 +4,9 @@ Object.defineProperty(RoomObject.prototype, 'data', {
   get: function() {
     let _data = $.structures[this.id];
     if (!_data) {
-      _data = {};
+      _data = {
+        hasTasks: {}
+      };
       $.structures[this.id] = _data;
     }
     return _data;
@@ -16,7 +18,7 @@ Object.defineProperty(RoomObject.prototype, 'data', {
  */
 RoomObject.prototype.getCheapSource = function() {
   if (!this.data.closestSource) {
-    let source = this.pos.findClosestByRange(FIND_SOURCES_ACTIVE);
+    let source = this.pos.findClosestByPath(FIND_SOURCES_ACTIVE);
     this.data.closestSource = {
       id: source.id,
       type: SOURCE
@@ -46,7 +48,8 @@ RoomObject.prototype.getCheapStorage = function() {
       filter: function(obj) {
         return (obj.structureType == STRUCTURE_STORAGE ||
                 obj.structureType == STRUCTURE_CONTAINER) &&
-                obj.store.getUsedCapacity() > 0;
+                // 给container留下一次decay的生命值
+                obj.store.getUsedCapacity() > CONTAINER_DECAY;
       }
     });
     if (storage != null) {
@@ -70,3 +73,4 @@ RoomObject.prototype.getStructureByType = function(structureType) {
   });
   return structures.length > 0 ? structures[0] : null;
 }
+
