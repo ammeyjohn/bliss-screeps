@@ -4,29 +4,40 @@
 
 /**
  * 检查能量是否已经充足，未充足则发布采集任务
- * storage可以从container收集或者source采集
+ * storage可以优先从container收集，其次从source采集
  */
-StructureStorage.prototype.check = function() {
-  if (this.store.getFreeCapacity(RESOURCE_ENERGY) > 0) {
-    let storage = this.pos.findClosestByRange(FIND_STRUCTURES, {
-      filter: function(obj) {
-        return obj.structureType == STRUCTURE_CONTAINER &&
-               obj.store.getUsedCapacity(RESOURCE_ENERGY) > 0;
-      }
-    });
-    if (storage == null) {
-      // 没有合适的container，那么从source采集
-      this.checkEnergy(TASK_HARVEST);
+StructureStorage.prototype.checkEnergy = function() {
+  const ratio = this.store[RESOURCE_ENERGY] / this.store.getCapacity(RESOURCE_ENERGY);
+  if (ratio < ENERGY_PERCENT ||
+      this.data.hasTasks[TASK_HARVEST] == true && ratio < 1.0) {
+    let container = this.getCheapContainer();
+    if (container != null) {
+      const priority =  $.tasks[TASK_TRANSPORT].priority / ratio;
+      bulletin.publish(TASK_TRANSPORT, container.id, this.id, priority);
+      this.data.hasTasks[TASK_TRANSPORT] = true;
       return;
+    } else {
+      // 如果没有找到合适的container，则从source采集
+      let source = this.getCheapSource();
+      if (source != null) {
+        const priority =  $.tasks[TASK_HARVEST].priority / ratio;
+        bulletin.publish(TASK_HARVEST, source.id, this.id, priority);
+        this.data.hasTasks[TASK_HARVEST] = true;
+        return;
+      }
     }
-    // 否则从container收集
-    bulletin.publish(TASK_TRANSPORT, storage.id, this.id, $.tasks[TASK_TRANSPORT].priority);
-    this.data.hasTransportTask = true;
-  } else {
-    if (this.data.hasTransportTask) {
-      // 如果能量已经满了，删除公告板中的同类任务
+  }
+
+  if ( ratio == 1.0 ) {
+    // 能量已满，取消任务
+    if (this.data.hasTasks[TASK_TRANSPORT] == true) {
       bulletin.reqComplete(TASK_TRANSPORT, this.id);
-      this.data.hasTransportTask = false;
+      this.data.hasTasks[TASK_TRANSPORT] = false;
+    }
+
+    if (this.data.hasTasks[TASK_HARVEST] == true) {
+      bulletin.reqComplete(TASK_HARVEST, this.id);
+      this.data.hasTasks[TASK_HARVEST] = false;
     }
   }
 }

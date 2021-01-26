@@ -31,33 +31,61 @@ RoomObject.prototype.getCheapSource = function() {
 }
 
 /**
- * 获取到达当前建筑代价最小的能量存储点
+ * 获取到达当前建筑代价最小的container
  */
-RoomObject.prototype.getCheapStorage = function() {
-  if (this.data.closestSource) {
-    if (this.data.closestSource.type != SOURCE) {
+RoomObject.prototype.getCheapContainer = function() {
+  if (this.data.closestContainer) {
+    if (this.data.closestContainer.type != SOURCE) {
       // 检查最近的能源存储是否为空
-      const storage = Game.getObjectById(this.data.closestSource.id);
-      if (storage && storage.store.getUsedCapacity() == 0) {
-        this.data.closestSource = null;
+      const container = Game.getObjectById(this.data.closestContainer.id);
+      if (container && container.store.getUsedCapacity() == 0) {
+        this.data.closestContainer = null;
       }
     }
   }
-  if (!this.data.closestSource) {
-    let storage = this.pos.findClosestByRange(FIND_MY_STRUCTURES, {
+  if (!this.data.closestContainer) {
+    const container = this.pos.findClosestByPath(FIND_MY_STRUCTURES, {
       filter: function(obj) {
-        return (obj.structureType == STRUCTURE_STORAGE ||
-                obj.structureType == STRUCTURE_CONTAINER) &&
-                // 给container留下一次decay的生命值
-                obj.store.getUsedCapacity() > CONTAINER_DECAY;
+        return obj.structureType == STRUCTURE_CONTAINER &&
+               // 需要给container留下一次decay的能量
+               obj.store.getUsedCapacity() > CONTAINER_DECAY;
       }
     });
+    if (container != null) {
+      this.data.closestContainer = {
+        id: container.id,
+        type: container.structureType
+      }
+      return Game.getObjectById(this.data.closestContainer.id);
+    }
+  }
+
+  return null;
+}
+
+/**
+ * 获取到达当前建筑代价最小的能量存储点
+ */
+RoomObject.prototype.getCheapStorage = function() {
+  if (this.data.closestStorage) {
+    if (this.data.closestStorage.type != SOURCE) {
+      // 检查最近的能源存储是否为空
+      const storage = Game.getObjectById(this.data.closestStorage.id);
+      if (storage && storage.store.getUsedCapacity() == 0) {
+        this.data.closestStorage = null;
+      }
+    }
+  }
+  if (!this.data.closestStorage) {
+    let storage = this.pos.findClosestByPath(FIND_MY_STRUCTURES, {
+      filter: function(obj) { return obj.structureType == STRUCTURE_STORAGE }
+    });
     if (storage != null) {
-      this.data.closestSource = {
+      this.data.closestStorage = {
         id: storage.id,
         type: storage.structureType
       }
-      return Game.getObjectById(this.data.closestSource.id);
+      return Game.getObjectById(this.data.closestStorage.id);
     }
   }
 
