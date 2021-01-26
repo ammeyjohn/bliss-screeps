@@ -21,39 +21,42 @@ Structure.prototype.check = function() {
 
 /**
  * 检查能量是否已经充足，未充足则发布采集任务
+ * 排除controller、container和storage之外，其他建筑都是优先从storage获取能量，否则从source采集
  */
 Structure.prototype.checkEnergy = function(taskType) {
   if (!this.store) { return; }
 
-  // 能量未满，尝试发布任务
-  if (this.store.getFreeCapacity(RESOURCE_ENERGY) > 0) {
-    let ratio = this.store[RESOURCE_ENERGY] / this.store.getCapacity(RESOURCE_ENERGY);
-    if (taskType == TASK_HARVEST) {
-      let source = this.getCheapSource();
-      if (source == null) {
-        log.debug('Cannot find source for ', this.id);
-        return;
-      }
-      let priority = $.tasks[TASK_HARVEST].priority / ratio;
-      bulletin.publish(TASK_HARVEST, source.id, this.id, priority);
-      this.data.hasHarvestTask = true;
-    } else if (taskType == TASK_TRANSPORT) {
-      let storage = this.getCheapStorage();
-      if (storage == null) {
-        log.debug('Cannot find storage for ', this.id);
-        return;
-      }
-      let priority = $.tasks[TASK_HARVEST].priority / ratio;
+  const ratio = this.store[RESOURCE_ENERGY] / this.store.getCapacity(RESOURCE_ENERGY);
+  if (ratio < ENERGY_PERCENT ||
+      (this.data.hasTasks[TASK_HARVEST] || this.data.hasTasks[TASK_TRANSPORT]) && ratio < 1.0) {
+    let storage = this.getCheapStorage();
+    if (storage != null) {
+      const priority =  $.tasks[TASK_TRANSPORT].priority / ratio;
       bulletin.publish(TASK_TRANSPORT, storage.id, this.id, priority);
-      this.data.hasHarvestTask = true;
+      this.data.hasTasks[TASK_TRANSPORT] = true;
+      return;
+    } else {
+      // 如果没有找到合适的container，则从source采集
+      let source = this.getCheapSource();
+      if (source != null) {
+        const priority =  $.tasks[TASK_HARVEST].priority / ratio;
+        bulletin.publish(TASK_HARVEST, source.id, this.id, priority);
+        this.data.hasTasks[TASK_HARVEST] = true;
+        return;
+      }
     }
-  } else {
-    if (this.data.hasHarvestTask || this.data.hasTransportTask) {
-      // 如果能量已经满了，删除公告板中的同类任务
-      bulletin.reqComplete(TASK_HARVEST, this.id);
+  }
+
+  if ( ratio == 1.0 ) {
+    // 能量已满，取消任务
+    if (this.data.hasTasks[TASK_TRANSPORT] == true) {
       bulletin.reqComplete(TASK_TRANSPORT, this.id);
-      this.data.hasHarvestTask = false;
-      this.data.hasTransportTask = false;
+      this.data.hasTasks[TASK_TRANSPORT] = false;
+    }
+
+    if (this.data.hasTasks[TASK_HARVEST] == true) {
+      bulletin.reqComplete(TASK_HARVEST, this.id);
+      this.data.hasTasks[TASK_HARVEST] = false;
     }
   }
 }

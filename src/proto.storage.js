@@ -9,7 +9,7 @@
 StructureStorage.prototype.checkEnergy = function() {
   const ratio = this.store[RESOURCE_ENERGY] / this.store.getCapacity(RESOURCE_ENERGY);
   if (ratio < ENERGY_PERCENT ||
-      this.data.hasTasks[TASK_HARVEST] == true && ratio < 1.0) {
+      (this.data.hasTasks[TASK_HARVEST] || this.data.hasTasks[TASK_TRANSPORT]) && ratio < 1.0) {
     let container = this.getCheapContainer();
     if (container != null) {
       const priority =  $.tasks[TASK_TRANSPORT].priority / ratio;
