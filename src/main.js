@@ -10,6 +10,7 @@ require('./proto.container');
 require('./proto.storage');
 require('./proto.tower');
 require('./proto.wall');
+require('./proto.rampart');
 require('./proto.creep');
 
 log.debug('Server restart.');
@@ -17,9 +18,6 @@ log.debug('Server restart.');
 module.exports.loop = () => {
 
   const room = _.values(Game.rooms)[0];
-
-  // 房间人口管理
-  // room.controller.population();
 
   // 所有炮塔进行防御
   const towers = room.find(FIND_STRUCTURES, {
@@ -47,6 +45,7 @@ module.exports.loop = () => {
              obj.structureType == STRUCTURE_CONTROLLER ||
              obj.structureType == STRUCTURE_EXTENSION ||
              obj.structureType == STRUCTURE_WALL ||
+             obj.structureType == STRUCTURE_RAMPART ||
              obj.structureType == STRUCTURE_ROAD ||
              obj.structureType == STRUCTURE_TOWER;
     }
@@ -62,7 +61,8 @@ module.exports.loop = () => {
   for(const idx in sites) {
     const site = sites[idx];
     let source = site.getCheapSource(site);
-    $.bulletin.publish(TASK_BUILD, source.id, site.id, $.tasks[TASK_BUILD].priority);
+    const priority = $.tasks[TASK_BUILD].priority / (1-site.progress)/site.progressTotal;
+    $.bulletin.publish(TASK_BUILD, source.id, site.id, priority);
   }
 
   // 为creep分配任务
