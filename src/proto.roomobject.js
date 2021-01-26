@@ -1,5 +1,4 @@
 
-
 Object.defineProperty(RoomObject.prototype, 'data', {
   get: function() {
     let _data = $.structures[this.id];
@@ -19,6 +18,9 @@ Object.defineProperty(RoomObject.prototype, 'data', {
 RoomObject.prototype.getCheapSource = function() {
   if (!this.data.closestSource) {
     let source = this.pos.findClosestByPath(FIND_SOURCES_ACTIVE);
+    if (source == null) {
+      source = this.pos.findClosestByRange(FIND_SOURCES_ACTIVE);
+    }
     this.data.closestSource = {
       id: source.id,
       type: SOURCE

@@ -12,7 +12,8 @@ global.profile = {
 global.SOURCE = 'source';
 
 global.DEFAULT_PRIORITY = 100;
-global.WALL_LEVEL_HITS = 100000;
+global.WALL_MULTIPLE = 10;
+// global.WALL_LEVEL_HITS = 100000;
 global.HITS_PERCENT = 0.2;
 global.ENERGY_PERCENT = 0.3;
 

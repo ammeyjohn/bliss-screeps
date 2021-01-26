@@ -46,14 +46,15 @@ class Bulletin {
    * @param {*} priority  任务优先级，默认为100，数值越高优先级越高
    * @param {*} options
    */
-  publish(taskType, sourceId, targetId, priority = DEFAULT_PRIORITY, options = null) {
-    if (!this.canPublish(taskType, targetId)) {
+  publish(taskType, sourceId, targetId, priority = DEFAULT_PRIORITY, options = {}) {
+    // 如果任务强制添加，则不检查任务是否可添加
+    if (options.forced || !this.canPublish(taskType, targetId)) {
       log.debug(`The count of task ${taskType} for ${targetId} has excceeded.`);
       return;
     }
     const task = new Task(taskType, sourceId, targetId, priority, options);
     this.addTask(task);
-    log.info(`Task published: ${taskType} for ${targetId}. (${this.taskCount})`);
+    log.info(`Task published: ${taskType} for ${targetId}. (${this.taskCount})`, options.forced?'forced=true':null);
     return task;
   }
 
