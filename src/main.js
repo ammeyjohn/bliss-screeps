@@ -62,7 +62,13 @@ module.exports.loop = () => {
     const site = sites[idx];
     let source = site.getCheapSource(site);
     const priority = $.tasks[TASK_BUILD].priority / (1-site.progress)/site.progressTotal;
-    $.bulletin.publish(TASK_BUILD, source.id, site.id, priority);
+    let options = {};
+    // wall和rampart需要同时维修
+    if (site.structureType == STRUCTURE_RAMPART ||
+        site.structureType == STRUCTURE_WALL) {
+      options.withRepair = 1;
+    }
+    $.bulletin.publish(TASK_BUILD, source.id, site.id, priority, options);
   }
 
   // 为creep分配任务

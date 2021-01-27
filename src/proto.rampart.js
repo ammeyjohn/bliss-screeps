@@ -17,18 +17,6 @@ StructureRampart.prototype.getPriorityMultiplier = function(taskType) {
 }
 
 /**
- * 添加任务
- * @param {*} taskType
- */
-StructureRampart.prototype.addTask = function(taskType, sourceId) {
-  const priority = this.getPriority(taskType);
-  bulletin.publish(taskType, sourceId, this.id, priority, {
-    forced: true
-  });
-  this.data.hasTasks[taskType] = true;
-}
-
-/**
  * 检查墙壁的血量是否满足要求
  */
 StructureRampart.prototype.repair = function() {

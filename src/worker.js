@@ -26,6 +26,9 @@ module.exports = class Worker {
   get targetId() {
     return this.task.targetId;
   }
+  set targetId(value) {
+    this.task.targetId = value;
+  }
 
   get target() {
     return Game.getObjectById(this.targetId);
@@ -65,9 +68,17 @@ module.exports = class Worker {
    * 验证任务是否有效
    */
   isValid() {
-    if (this.source == null) { return false; }
-    if (this.target == null) { return false; }
-    return true;
+    let ret = true;
+    if (this.source == null) { ret = false; }
+    if (this.target == null) { ret = false; }
+    if (!ret) {
+      // 查看是否需要延迟处理
+      if (this.task.options.invalidDelay > 0) {
+        ret = true;
+        this.task.options.invalidDelay -= 1;
+      }
+    }
+    return ret;
   }
 
   /**

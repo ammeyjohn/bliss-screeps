@@ -54,7 +54,7 @@ class Bulletin {
     }
     const task = new Task(taskType, sourceId, targetId, priority, options);
     this.addTask(task);
-    log.info(`Task published: ${taskType} for ${targetId}. (${this.taskCount})`, options.forced?'forced=true':null);
+    log.info(`Task published: ${taskType} for ${targetId}. (${this.taskCount})`, options.forced?'forced=true':'');
     return task;
   }
 
