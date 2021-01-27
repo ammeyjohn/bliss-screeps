@@ -57,7 +57,7 @@ class Operation {
     $.message['avg_assign'] = $.profile.assigned_task_time / $.profile.assigned_task_count;
     $.message['avg_complete'] = $.profile.completed_task_time / $.profile.completed_task_count;
     $.message['creeps'] = $.profile.creeps;
-    if (Game.time % 10 == 0) {
+    if (Game.time % 500 == 0) {
       let json = JSON.stringify($.message);
       $.log.info(json);
     }

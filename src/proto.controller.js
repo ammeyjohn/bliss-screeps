@@ -40,7 +40,7 @@ StructureController.prototype.incubate = function() {
     spawn.spawnCreep(role.body, `${role.prefix}@${Game.time}`);
     log.info('Spawn creep: ', role.type);
 
-    if (Game.time % 20 == 0) {
+    if (Game.time % 100 == 0) {
       const count = ops.statCreepsInRoom(this.room);
       log.info(JSON.stringify(count));
       $.message['creeps'] = count;
