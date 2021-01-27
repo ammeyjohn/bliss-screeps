@@ -14,19 +14,19 @@ module.exports = class WorkRepairer extends Worker {
    */
   execute() {
 
-    if (!this.executor.mode) {
-      this.executor.mode = 'harvest';
+    if (!this.task.options.mode) {
+      this.task.options.mode = 'harvest';
     }
-    if(this.executor.mode == 'harvest' && this.executor.store.getFreeCapacity() == 0) {
-      this.executor.mode = 'repair';
+    if(this.task.options.mode == 'harvest' && this.executor.store.getFreeCapacity() == 0) {
+      this.task.options.mode = 'repair';
     }
-    if(this.executor.mode == 'repair' && this.executor.store[RESOURCE_ENERGY] == 0) {
+    if(this.task.options.mode == 'repair' && this.executor.store[RESOURCE_ENERGY] == 0) {
       // 能量运送到目标后标记任务完成
       bulletin.complete(this.task.taskId);
       this.executor.unassign(this.task);
     }
 
-    if(this.executor.mode == 'repair') {
+    if(this.task.options.mode == 'repair') {
       const ret = this.executor.repair(this.target);
       if (ret == ERR_NOT_IN_RANGE) {
         this.executor.moveTo(this.target, {visualizePathStyle: {stroke: '#ffffff'}});

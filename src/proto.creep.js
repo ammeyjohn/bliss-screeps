@@ -10,15 +10,6 @@ Object.defineProperty(Creep.prototype, 'curTask', {
   }
 });
 
-Object.defineProperty(Creep.prototype, 'mode', {
-  get: function() {
-    return this.memory.mode;
-  },
-  set: function(mode) {
-    this.memory.mode = mode;
-  }
-});
-
 Object.defineProperty(Creep.prototype, 'assigned', {
   get: function() {
     return this.memory.taskId != null;
@@ -51,9 +42,8 @@ Creep.prototype.assign = function(task) {
  * 清除已经分配的任务
  */
 Creep.prototype.unassign = function() {
-  // log.info(`Task ${this.curTask.taskType} has unassigned from ${this.name}.`);
   this.memory.taskId = null;
-  this.memory.mode = null;
+  log.info(`Task unassigned: ${this.name}`);
 }
 
 /**
