@@ -23,9 +23,7 @@ module.exports = class WorkHarvester extends Worker {
       if (ret == ERR_NOT_IN_RANGE) {
         this.executor.moveTo(this.target, {visualizePathStyle: {stroke: '#ffffff'}});
       } else if (ret == OK) {
-        // 能力运送到目标后标记任务完成
-        bulletin.complete(this.task.taskId);
-        this.executor.unassign(this.task);
+        super.execNext();
       }
     }
   }

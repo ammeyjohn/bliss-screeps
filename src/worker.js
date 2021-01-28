@@ -88,4 +88,16 @@ module.exports = class Worker {
     log.warning('Nothing execute.');
     return false;
   }
+
+  /**
+   * 执行下一步关联任务
+   */
+  execNext() {
+    if (this.task.nextTask) {
+      this.task = this.task.nextTask;
+    } else {
+      bulletin.complete(this.task.taskId);
+      this.executor.unassign(this.task);
+    }
+  }
 }
