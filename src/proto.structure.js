@@ -56,8 +56,10 @@ Structure.prototype.completeTask = function(taskType) {
  * 检查能量是否已经充足，未充足则发布采集任务
  */
 Structure.prototype.check = function() {
-  // 检查建筑物能量
-  this.checkEnergy();
+  if (this.structureType != STRUCTURE_LINK) {
+    // 检查建筑物能量
+    this.checkEnergy();
+  }
 }
 
 /**
@@ -66,6 +68,9 @@ Structure.prototype.check = function() {
  */
 Structure.prototype.checkEnergy = function() {
   if (!this.store) { return; }
+  if (this.structureType == STRUCTURE_LINK) {
+    return;
+  }
 
   const ratio = this.store[RESOURCE_ENERGY] / this.store.getCapacity(RESOURCE_ENERGY);
   if (ratio < ENERGY_PERCENT ||

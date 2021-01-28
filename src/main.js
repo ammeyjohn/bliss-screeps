@@ -13,6 +13,8 @@ require('./proto.wall');
 require('./proto.rampart');
 require('./proto.creep');
 
+const LinkHarvestProcedure = require('./proc_linkharvest');
+
 log.debug('Server restart.');
 
 module.exports.loop = () => {
@@ -29,6 +31,10 @@ module.exports.loop = () => {
     const tower = towers[idx];
     tower.defence();
   }
+
+  // 处理固定流程
+  const proc = new LinkHarvestProcedure();
+  proc.execute();
 
   // 推动creep执行任务
   for (let name in Game.creeps) {
@@ -47,7 +53,8 @@ module.exports.loop = () => {
              obj.structureType == STRUCTURE_WALL ||
              obj.structureType == STRUCTURE_RAMPART ||
              obj.structureType == STRUCTURE_ROAD ||
-             obj.structureType == STRUCTURE_TOWER;
+             obj.structureType == STRUCTURE_TOWER ||
+             obj.structureType == STRUCTURE_LINK;
     }
   });
   for (const idx in structures) {
@@ -61,7 +68,7 @@ module.exports.loop = () => {
   for(const idx in sites) {
     const site = sites[idx];
     let source = site.getCheapSource(site);
-    const priority = $.tasks[TASK_BUILD].priority / (1-site.progress)/site.progressTotal;
+    const priority = $.tasks[TASK_BUILD].priority / ((1-site.progress)/site.progressTotal);
     let options = {};
     // wall和rampart需要同时维修
     if (site.structureType == STRUCTURE_RAMPART ||

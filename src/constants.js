@@ -10,10 +10,8 @@ global.profile = {
 };
 
 global.SOURCE = 'source';
-
 global.DEFAULT_PRIORITY = 100;
 global.WALL_MULTIPLE = 10;
-// global.WALL_LEVEL_HITS = 100000;
 global.HITS_PERCENT = 0.2;
 global.ENERGY_PERCENT = 0.3;
 
@@ -39,17 +37,14 @@ global.tasks = {
   },
   'upgrade': {
     max_count: 2,
-    max_period: 100,
     priority: 50
   },
   'build': {
     max_count: 5,
-    max_period: 100,
     priority: 75
   },
   'repair': {
     max_count: 3,
-    max_period: 100,
     priority: 100
   },
   'transport': {
@@ -57,3 +52,24 @@ global.tasks = {
     priority: 150
   }
 };
+
+global.procedures = {
+  'link_transfer': {
+    creep: {
+      prefix: 'link_transfer', // 名称前缀
+      energy: 400,             // 所需能量
+      body: [WORK,WORK,CARRY,CARRY,MOVE,MOVE],  // 创建身体部件
+      role: 'harvester'
+    },
+    sink_linkid: '',
+    storageid: '',
+    creepname: '',
+    sources: [{
+      linkid: '',
+      sourceid: '',
+      creepname: ''
+    }]
+  }
+};
+global.proc_instances = [];
+// global.proc_instances.push(new )
