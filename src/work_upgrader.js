@@ -22,8 +22,7 @@ module.exports = class WorkUpgrader extends Worker {
     }
     if(this.task.options.mode == 'upgrade' && this.executor.store[RESOURCE_ENERGY] == 0) {
       // 能量运送到目标后标记任务完成
-      bulletin.complete(this.task.taskId);
-      this.executor.unassign(this.task);
+      super.execNext();
     }
 
     if(this.task.options.mode == 'upgrade') {

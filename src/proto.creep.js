@@ -21,6 +21,7 @@ Object.defineProperty(Creep.prototype, 'assigned', {
  */
 Creep.prototype.canAssign = function(task) {
   if (this.spawning) { return false; }
+  if (this.memory.role) { return false; } // 不给指定角色的creep分配任务
   if (this.memory.taskId != null) { return false; }
   if (task.taskType == TASK_ATTACK) {
     // 需要攻击组件
@@ -60,6 +61,7 @@ Creep.prototype.abandon = function() {
 Creep.prototype.execute = function() {
   // 孵化中不执行任务
   if (this.spawning) { return; }
+  if (this.memory.role) { return; } // 指定角色的creep由对应的role.*驱动
   if (this.memory.taskId == null) { return; }
 
   const worker = this.curTask;

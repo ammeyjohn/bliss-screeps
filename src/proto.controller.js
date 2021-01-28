@@ -37,8 +37,15 @@ StructureController.prototype.incubate = function() {
       // 如果无法获取到可用的spawn，那么本次不创建creep
       return;
     }
-    spawn.spawnCreep(role.body, `${role.prefix}@${Game.time}`);
-    log.info('Spawn creep: ', role.type);
+
+    // 设置角色类型
+    let opts = null;
+    if (!role.role) {
+      opts = { memory: {role: role.role} }
+    }
+
+    spawn.spawnCreep(role.body, `${role.prefix}@${Game.time}`, opts);
+    log.info('Spawn creep: ', role.type, role.role);
 
     if (Game.time % 100 == 0) {
       const count = ops.statCreepsInRoom(this.room);
