@@ -177,10 +177,10 @@ class Bulletin {
         creep.assign(task);
         task.executorId = creep.id;
 
-        log.info(`Task assigned: ${task.taskId} ==> ${creep.name}`);
+        log.info(`Task assigned: ${task.taskId} => ${creep.name}`);
 
-        $.profile['assigned_task_count'] += 1;
-        $.profile['assigned_task_time'] += (Game.time - task.createTime);
+        $.profile.tasks[task.taskType]['assigned_task_count'] += 1;
+        $.profile.tasks[task.taskType]['assigned_task_time'] += (Game.time - task.createTime);
       }
 
     }
@@ -197,8 +197,8 @@ class Bulletin {
       this.tasks.splice(idx, 1);
       log.info(`Task completed: ${task.taskId};`);
 
-      $.profile['completed_task_count'] += 1;
-      $.profile['completed_task_time'] += (Game.time - task.createTime);
+      $.profile.tasks[task.taskType]['completed_task_count'] += 1;
+      $.profile.tasks[task.taskType]['completed_task_time'] += (Game.time - task.createTime);
     }
   }
 

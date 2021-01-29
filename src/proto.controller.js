@@ -39,13 +39,13 @@ StructureController.prototype.incubate = function() {
     }
 
     // 设置角色类型
-    let opts = null;
+    let opts = { memory: { type: role.type } }
     if (!role.role) {
-      opts = { memory: {role: role.role} }
+      opts.memory.role = role.role;
     }
 
     spawn.spawnCreep(role.body, `${role.prefix}@${Game.time}`, opts);
-    log.info('Spawn creep: ', role.type, role.role);
+    log.info('Spawn creep: type=', role.type, ',role=', role.role);
 
     if (Game.time % 100 == 0) {
       const count = ops.statCreepsInRoom(this.room);

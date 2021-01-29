@@ -1,15 +1,9 @@
-const LinkHarvestProcedure = require('./proc_linkharvest');
-
 global.$ = global;
 global.settings = { };
 global.structures = { };
 global.message = { };
 global.profile = {
-  assigned_task_count: 0,
-  assigned_task_time: 0,
-  completed_task_count: 0,
-  completed_task_time: 0,
-
+  tasks: { }
 };
 
 global.SOURCE = 'source';
@@ -55,11 +49,21 @@ global.tasks = {
     priority: 150
   }
 };
+for (const key in $.tasks) {
+  $.profile.tasks[key] = {
+    assigned_task_count: 0,
+    assigned_task_time: 0,
+    completed_task_count: 0,
+    completed_task_time: 0,
+    avg_assign_time: 0.0,
+    avg_complete_time: 0.0
+  }
+}
 
 global.procedures = {
   'link_transfer': {
     creep: {
-      prefix: 'link_transfer', // 名称前缀
+      type: 'link_transfer', // 名称前缀
       energy: 400,             // 所需能量
       body: [WORK,WORK,CARRY,CARRY,MOVE,MOVE],  // 创建身体部件
       role: 'harvester'
@@ -74,6 +78,3 @@ global.procedures = {
     }]
   }
 };
-global.proc_instances = [
-  new LinkHarvestProcedure('link_transfer')
-];

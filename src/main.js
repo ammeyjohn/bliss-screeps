@@ -15,6 +15,11 @@ require('./proto.creep');
 
 log.debug('Server restart.');
 
+const LinkHarvestProcedure = require('./proc_linkharvest');
+$.procedureInstances = [
+  new LinkHarvestProcedure('link_transfer')
+]
+
 module.exports.loop = () => {
 
   const room = _.values(Game.rooms)[0];
@@ -31,7 +36,7 @@ module.exports.loop = () => {
   }
 
   // 处理固定流程
-  for (const proc of $.proc_instances) {
+  for (const proc of $.procedureInstances) {
     proc.execute();
   }
 

@@ -52,13 +52,23 @@ class Operation {
    * 邮件发送整体情况
    */
   notifyProfile(room) {
+    $.message = { };
     $.message['RCL'] = room.controller.level;
     $.message['GCL'] = Game.gcl;
-    $.message['avg_assign'] = $.profile.assigned_task_time / $.profile.assigned_task_count;
-    $.message['avg_complete'] = $.profile.completed_task_time / $.profile.completed_task_count;
-    $.message['creeps'] = $.profile.creeps;
-    if (Game.time % 500 == 0) {
-      let json = JSON.stringify($.message);
+    let counter = { };
+    for (const key in $.profile.tasks) {
+      const task = $.profile.tasks[key];
+      task['avg_assign_time'] = task['assigned_task_count'] / task['assigned_task_time'];
+      task['avg_complete_time'] = task['completed_task_count'] / task['completed_task_time'];
+      counter[task.taskType] = {
+        'avg_assign_time': task['avg_assign_time'],
+        'avg_complete_time': task['avg_complete_time']
+      }
+    }
+    $.message['counter'] = counter;
+    $.message['creeps'] = this.statCreepsInRoom();
+    if (Game.time % 100 == 0) {
+      let json = JSON.stringify($.message, null, 2);
       $.log.info(json);
     }
     if (Game.time % 5000 == 0) {
@@ -73,13 +83,19 @@ class Operation {
     for (const role of global.roles) {
       creeps_count[role.type] = { count: 0 };
     }
+    creeps_count.total_count = _.size(Game.creeps);
     for (const name in Game.creeps) {
       const creep = Game.creeps[name];
-      if (creeps_count[creep.memory.role]) {
-        creeps_count[creep.memory.role].count += 1;
+      if (creeps_count[creep.memory.type]) {
+        creeps_count[creep.memory.type].count += 1;
+      }
+      if (creep.memory.role) {
+        if (!creeps_count[creep.memory.role]) {
+          creeps_count[creep.memory.role] = 0;
+        }
+        creeps_count[creep.memory.role] += 1;
       }
     }
-    $.profile['creeps'] = creeps_count;
     return creeps_count;
   }
 }
