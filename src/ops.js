@@ -49,6 +49,22 @@ class Operation {
   }
 
   /**
+   * 保存房间内各种建筑的坐标
+   */
+  designSaver(room) {
+    const structures = room.find(FIND_STRUCTURES, {
+      filter: function(obj) {
+        return obj.structureType == STRUCTURE_ROAD ||
+               obj.structureType == STRUCTURE_WALL ||
+              (obj.structureType == STRUCTURE_RAMPART && obj.my)
+      }
+    });
+    Memory.designDrawings = _.map(structures, function(obj) {
+        return _.pick(obj, [ 'structureType', 'pos' ]);
+    });
+  }
+
+  /**
    * 邮件发送整体情况
    */
   notifyProfile(room) {

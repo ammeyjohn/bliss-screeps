@@ -85,6 +85,11 @@ module.exports.loop = () => {
   // 为creep分配任务
   $.bulletin.dispatch();
 
+  // 保存房间布局
+  if (Game.time % 100 == 0 || !Memory.designDrawings) {
+    ops.designSaver(room);
+  }
+
   // 房间清理
   if (Game.time % 100 == 0) {
     ops.clear();
