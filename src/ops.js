@@ -58,9 +58,9 @@ class Operation {
     let counter = { };
     for (const key in $.profile.tasks) {
       const task = $.profile.tasks[key];
-      task['avg_assign_time'] = task['assigned_task_count'] / task['assigned_task_time'];
-      task['avg_complete_time'] = task['completed_task_count'] / task['completed_task_time'];
-      counter[task.taskType] = {
+      task['avg_assign_time'] = task['assigned_task_time'] / task['assigned_task_count'];
+      task['avg_complete_time'] = task['completed_task_time'] / task['completed_task_count'];
+      counter[key] = {
         'avg_assign_time': task['avg_assign_time'],
         'avg_complete_time': task['avg_complete_time']
       }

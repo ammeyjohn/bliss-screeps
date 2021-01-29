@@ -19,12 +19,12 @@ global.roles = [
     energy: 400,             // 所需能量
     body: [WORK,WORK,CARRY,CARRY,MOVE,MOVE]  // 创建身体部件
   },
-  {
-    prefix: 'normal',        // 名称前缀
-    type: 'normal',          // 角色类型
-    energy: 200,             // 所需能量
-    body: [WORK,CARRY,MOVE]  // 创建身体部件
-  }
+  // {
+  //   prefix: 'normal',        // 名称前缀
+  //   type: 'normal',          // 角色类型
+  //   energy: 200,             // 所需能量
+  //   body: [WORK,CARRY,MOVE]  // 创建身体部件
+  // }
 ];
 
 global.tasks = {
