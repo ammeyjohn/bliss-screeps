@@ -1,3 +1,5 @@
+const LinkHarvestProcedure = require('./proc_linkharvest');
+
 global.$ = global;
 global.settings = { };
 global.structures = { };
@@ -6,7 +8,8 @@ global.profile = {
   assigned_task_count: 0,
   assigned_task_time: 0,
   completed_task_count: 0,
-  completed_task_time: 0
+  completed_task_time: 0,
+
 };
 
 global.SOURCE = 'source';
@@ -71,5 +74,6 @@ global.procedures = {
     }]
   }
 };
-global.proc_instances = [];
-// global.proc_instances.push(new )
+global.proc_instances = [
+  new LinkHarvestProcedure('link_transfer')
+];

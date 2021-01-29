@@ -13,8 +13,6 @@ require('./proto.wall');
 require('./proto.rampart');
 require('./proto.creep');
 
-const LinkHarvestProcedure = require('./proc_linkharvest');
-
 log.debug('Server restart.');
 
 module.exports.loop = () => {
@@ -33,8 +31,9 @@ module.exports.loop = () => {
   }
 
   // 处理固定流程
-  const proc = new LinkHarvestProcedure();
-  proc.execute();
+  for (const proc of $.proc_instances) {
+    proc.execute();
+  }
 
   // 推动creep执行任务
   for (let name in Game.creeps) {
