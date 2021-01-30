@@ -1,9 +1,50 @@
 /**
  * 定义房管所对象，用于管理房间内的建筑
  */
-module.exports = class HouseManager {
+class HouseManager {
   constructor() {
+    if (!Memory.tiles) {
+      Memory.tiles = {};
+    }
+  }
 
+  /**
+   * 记录是否走过某个tile
+   * @param {*} pos
+   */
+  walkthrough(pos) {
+    const key = `${pos.x},${pos.y}`;
+    if (!Memory.tiles[key]) {
+      Memory.tiles[key] = {
+        count: 0,
+        pos: pos
+      };
+    }
+    Memory.tiles[key].count += 1;
+  }
+
+  /**
+   * 根据途径统计数据修建路
+   */
+  constructRoad() {
+    if (!Memory.tiles) {
+      return;
+    }
+
+    let new_tiles = {};
+    for(const key in Memory.tiles) {
+      const val = Memory.tiles[key];
+      if (val.count >= WALLTHROUGHT_COUNT) {
+        const room = Game.rooms[val.pos.roomName];
+        const ret = room.createConstructionSite(val.pos.x, val.pos.y, STRUCTURE_ROAD);
+        if (ret != ERR_FULL && ret != ERR_RCL_NOT_ENOUGH) {
+          // 当条件达到时还是需要修建路的，需要加入列表
+          continue;
+        }
+      }
+      new_tiles[key] = val;
+    }
+    Memory.tiles = new_tiles;
   }
 
   /**
@@ -44,3 +85,4 @@ module.exports = class HouseManager {
     }
   }
 }
+$.houseManager = new HouseManager();

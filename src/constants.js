@@ -11,6 +11,7 @@ global.DEFAULT_PRIORITY = 100;
 global.WALL_MULTIPLE = 10;
 global.HITS_PERCENT = 0.2;
 global.ENERGY_PERCENT = 0.3;
+global.WALLTHROUGHT_COUNT = 5;
 
 global.roles = [
   {

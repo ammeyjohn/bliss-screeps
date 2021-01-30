@@ -2,6 +2,7 @@ require('./constants');
 require('./log');
 require('./utils');
 require('./bulletin');
+require('./ops_housemanager');
 require('./ops');
 // 引用扩展
 require('./proto.roomobject');
@@ -87,7 +88,7 @@ module.exports.loop = () => {
   $.bulletin.dispatch();
 
   // 房间运维
-  $.ops.maintent();
+  $.ops.maintent(room);
 
   // 定时发送汇总邮件
   ops.notifyProfile(room);

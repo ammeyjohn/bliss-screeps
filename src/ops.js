@@ -1,6 +1,3 @@
-const HouseManager = require('./ops_housemanager');
-const houseManager = new HouseManager();
-
 /**
  * 定义房间运维
  */
@@ -36,20 +33,24 @@ class Operation {
   /**
    * 维护房间状态
    */
-  maintent() {
+  maintent(room) {
+
+    // 恢复房间布局
+    $.houseManager.restoreHouse(room);
+
+    // 自动修建路
+    $.houseManager.constructRoad(room);
+
     // 执行清理工作
     if (Game.time % 100 == 0) {
       $.bulletin.clear();
       this.clearGlobalStructure();
       this.clearMemoryCreep();
-
-      // 恢复房间布局
-      houseManager.restoreHouse(room);
     }
 
     // 保存房间的建筑布局图
     if (Game.time % 100 == 0 || !Memory.designDrawings) {
-      houseManager.designSaver(room);
+      $.houseManager.designSaver(room);
     }
   }
 

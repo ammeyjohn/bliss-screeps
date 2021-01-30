@@ -81,3 +81,22 @@ Creep.prototype.execute = function() {
   // 执行任务
   worker.execute();
 }
+
+/**
+ * 覆盖creep的moveTo方法，统计每个tile走过的次数
+ */
+Creep.prototype.__moveTo = Creep.prototype.moveTo;
+Creep.prototype.moveTo = function(target, opts) {
+  const look = target.room.lookAt(this.pos);
+  for(const thing of look) {
+    if (thing.type == 'structure' && thing.structure.structureType == STRUCTURE_ROAD) {
+      // 如果已经是路那么不重复统计
+      break;
+    }
+    if (thing.type == 'terrain' && thing.terrain == 'plain') {
+      $.houseManager.walkthrough(this.pos)
+    }
+  }
+
+  return this.__moveTo(target, opts);
+}
