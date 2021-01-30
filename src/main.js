@@ -1,5 +1,6 @@
 require('./constants');
 require('./log');
+require('./utils');
 require('./bulletin');
 require('./ops');
 // 引用扩展
@@ -85,15 +86,8 @@ module.exports.loop = () => {
   // 为creep分配任务
   $.bulletin.dispatch();
 
-  // 保存房间布局
-  if (Game.time % 100 == 0 || !Memory.designDrawings) {
-    ops.designSaver(room);
-  }
-
-  // 房间清理
-  if (Game.time % 100 == 0) {
-    ops.clear();
-  }
+  // 房间运维
+  $.ops.maintent();
 
   // 定时发送汇总邮件
   ops.notifyProfile(room);

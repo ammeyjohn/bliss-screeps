@@ -1,18 +1,10 @@
+const HouseManager = require('./ops_housemanager');
+const houseManager = new HouseManager();
+
 /**
  * 定义房间运维
  */
-
 class Operation {
-
-  /**
-   * 执行房间清理工作
-   * @param {*} room
-   */
-  clear(room) {
-    this.clearBulletin();
-    this.clearGlobalStructure();
-    this.clearMemoryCreep();
-  }
 
   /**
    * 清理global对象中的structure数据
@@ -42,26 +34,23 @@ class Operation {
   }
 
   /**
-   * 清理公告板数据
+   * 维护房间状态
    */
-  clearBulletin() {
-    $.bulletin.clear();
-  }
+  maintent() {
+    // 执行清理工作
+    if (Game.time % 100 == 0) {
+      $.bulletin.clear();
+      this.clearGlobalStructure();
+      this.clearMemoryCreep();
 
-  /**
-   * 保存房间内各种建筑的坐标
-   */
-  designSaver(room) {
-    const structures = room.find(FIND_STRUCTURES, {
-      filter: function(obj) {
-        return obj.structureType == STRUCTURE_ROAD ||
-               obj.structureType == STRUCTURE_WALL ||
-              (obj.structureType == STRUCTURE_RAMPART && obj.my)
-      }
-    });
-    Memory.designDrawings = _.map(structures, function(obj) {
-        return _.pick(obj, [ 'structureType', 'pos' ]);
-    });
+      // 恢复房间布局
+      houseManager.restoreHouse(room);
+    }
+
+    // 保存房间的建筑布局图
+    if (Game.time % 100 == 0 || !Memory.designDrawings) {
+      houseManager.designSaver(room);
+    }
   }
 
   /**
