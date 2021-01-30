@@ -20,14 +20,16 @@ module.exports = class WorkBuilder extends Worker {
     if(this.task.options.mode == 'harvest' && this.executor.store.getFreeCapacity() == 0) {
       this.task.options.mode = 'build';
     }
-    if((this.task.options.mode == 'build' && this.target == null) ||        // 建筑物已经建造完成
-       (this.task.options.mode == 'build' || this.task.options.mode == 'repair') &&     // creep能量用完
-        this.executor.store[RESOURCE_ENERGY] == 0) {
-      // 能量运送到目标后标记任务完成
-      super.execNext();
-    }
 
     if(this.task.options.mode == 'build') {
+
+      // creep能量全部用完或者目标建筑消失（建造完成）时完成任务
+      if (this.target == null ||
+          this.executor.store[RESOURCE_ENERGY] == 0) {
+        super.execNext();
+        return;
+      }
+
       const site = this.target;
       const ret = this.executor.build(site);
       if (ret == ERR_NOT_IN_RANGE) {
@@ -56,6 +58,13 @@ module.exports = class WorkBuilder extends Worker {
         }
       }
       if (this.target) {
+        // creep能量全部用完或者目标建筑满血时完成任务
+        if (this.executor.store[RESOURCE_ENERGY] == 0 ||
+            this.target.hits == this.target.hitsMax) {
+          super.execNext();
+          return;
+        }
+
         this.executor.repair(this.target);
       }
     }

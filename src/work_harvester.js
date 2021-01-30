@@ -22,7 +22,8 @@ module.exports = class WorkHarvester extends Worker {
       const ret = this.executor.transfer(this.target, RESOURCE_ENERGY);
       if (ret == ERR_NOT_IN_RANGE) {
         this.executor.moveTo(this.target, {visualizePathStyle: {stroke: '#ffffff'}});
-      } else if (ret == OK) {
+      } else if (ret == OK || ret == ERR_FULL) {
+        // 完成一次能量传输或者目标建筑能量已经满了
         super.execNext();
       }
     }

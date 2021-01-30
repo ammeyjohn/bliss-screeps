@@ -20,7 +20,8 @@ module.exports = class WorkRepairer extends Worker {
     if(this.task.options.mode == 'harvest' && this.executor.store.getFreeCapacity() == 0) {
       this.task.options.mode = 'repair';
     }
-    if(this.task.options.mode == 'repair' && this.executor.store[RESOURCE_ENERGY] == 0) {
+    if(this.task.options.mode == 'repair' &&
+       (this.executor.store[RESOURCE_ENERGY] == 0 || this.target.hits == this.target.hitsMax)) {
       super.execNext();
     }
 

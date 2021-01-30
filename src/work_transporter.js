@@ -35,7 +35,8 @@ module.exports = class WorkTransporter extends WorkHarvester {
       }
     }
 
-    if (this.executor.store.getFreeCapacity() == 0) {
+    if (this.executor.store.getFreeCapacity() == 0 ||
+        this.target.store.getFreeCapacity() == 0) {
       super.execNext();
     }
   }
