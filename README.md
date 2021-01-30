@@ -20,9 +20,9 @@ A screeps game world.
 - [ ] 使用tower来辅助修复wall、rampart
 - [ ] upgrade、build、repair都可以从storage获取能量
 - [ ] 增加hauler（运输者），只包含CARRY和MOVE
-- [ ] 维护道路，如果道路消失需要自动重新创建
+- [X] 维护道路，如果road\wall\rampart消失需要自动重新创建
 - [ ] 维护建筑，如果建筑消失需要自动重新创建
-- [ ] 自动建路，统计creep走过每个tile的次数，次数最多的tile建路
+- [X] 自动建路，统计creep走过每个tile的次数，次数最多的tile建路
 - [ ] 可以通过设置不同颜色的flag，实现自动铺路
 - [ ] 新建工具方法
 - [ ] 开发命令模块，可以直接在console中输入命令
