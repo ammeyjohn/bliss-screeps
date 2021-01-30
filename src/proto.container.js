@@ -11,7 +11,7 @@ StructureContainer.prototype.checkEnergy = function() {
       // 如果已经在采集资源，则采集满
       (this.data.hasTasks[TASK_HARVEST] && this.store[RESOURCE_ENERGY] < this.store.getCapacity(RESOURCE_ENERGY))) {
     let priority = $.tasks[TASK_HARVEST].priority / ratio;
-    let source = this.getCheapStorage();
+    let source = this.getCheapSource();
     bulletin.publish(TASK_HARVEST, source.id, this.id, priority);
     this.data.hasTasks[TASK_HARVEST] = true;
   }
