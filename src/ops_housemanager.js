@@ -31,7 +31,6 @@ class HouseManager {
       return;
     }
 
-    let new_tiles = {};
     for(const key in Memory.tiles) {
       const val = Memory.tiles[key];
       if (val.count >= WALLTHROUGHT_COUNT) {
@@ -42,9 +41,8 @@ class HouseManager {
           continue;
         }
       }
-      new_tiles[key] = val;
     }
-    Memory.tiles = new_tiles;
+    Memory.tiles = {};
   }
 
   /**

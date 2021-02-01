@@ -35,11 +35,14 @@ class Operation {
    */
   maintent(room) {
 
-    // 恢复房间布局
-    $.houseManager.restoreHouse(room);
-
-    // 自动修建路
-    $.houseManager.constructRoad(room);
+    if (Game.time % 10 == 0) {
+      // 恢复房间布局
+      $.houseManager.restoreHouse(room);
+    }
+    if (Game.time % 50 == 0) {
+      // 自动修建路
+      $.houseManager.constructRoad(room);
+    }
 
     // 执行清理工作
     if (Game.time % 100 == 0) {
